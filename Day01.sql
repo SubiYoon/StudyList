@@ -83,11 +83,37 @@ SELECT ename, sal FROM emp ORDER BY sal DESC;
 SELECT ename, job, sal FROM emp ORDER BY job ASC, sal ASC;
 
 -- 81년도에 입사한 사원을 부서별 급여순으로 정렬하라.
-SELECT ename, job, hiredate, sal FROM emp
-WHERE HIREDATE LIKE '%81%' ORDER BY job ASC, sal DESC;
+SELECT * FROM emp
+WHERE HIREDATE LIKE '%81%' ORDER BY deptno ASC, sal DESC;
 
+-- 1. 사원번호, 이름, 급여 출력
+SELECT empno, ename, sal FROM emp;
+-- 2. 사원번호, 이름 급여, 담당업무 출력 이름 오름차순
+SELECT empno, ename, sal, job FROM emp ORDER BY ename ASC;
+-- 3. 5월에 입사한 사원 출력
+SELECT * FROM emp WHERE hiredate LIKE '%05___';
+-- 4. 이름에 A인 사원과 급여가 3000이상인 사원
+SELECT * FROM emp WHERE ename LIKE '%A%' OR sal>=3000;
+-- 5. 업무가 SALESMAN or MANAGER인 사원
+SELECT * FROM emp WHERE job='MANAGER' OR job='SALESMAN'; -- job IN ('MANAGER', 'SALESMAN');
+-- 6. 급여가 3000이상이고 보너스 받지 않는사람
+SELECT * FROM emp WHERE sal>=3000 AND (comm=0 OR comm IS NULL); -- NVL(comm, 0)<=0;
+-- 7. 급여가 2000 ~ 4000인 사원과 보너스를 받는 사원을 급여의 내림차순으로 정렬
+SELECT * FROM emp WHERE sal BETWEEN 2000 AND 4000 OR comm>0 ORDER BY sal DESC; -- NVL(comm, 0)>0;
+-- 8. 현재 계정의 테이블 목록을 확인하는 쿼리문
+SELECT * FROM tab;
+-- 9. 사원번호, 이름, 업무, 입사일, 급여를 부서코드가 10,20인 사원을 업무는 오름차순 급여는 내림차순으로 정렬
+SELECT empno, ename, job, hiredate, sal FROM emp WHERE deptno IN(10, 20) ORDER BY job ASC, sal DESC;
 
+-- || 파이프라인
+SELECT '내이름' || ename || '입니다.' from emp;
 
+SELECT ename ||''||'IS A'||''||job AS "EMPLOYEES DETAILS" FROM emp;
+SELECT ename ||': 1 YEAR SALARY = '|| sal AS sal_List FROM emp;
+
+-- distinct : 중복행 제거
+--			  특정필드의 값중에 같은 값을 제거하고 1개씩만 선택
+SELECT DISTINCT job FROM emp;
 
 
 SELECT * FROM emp;
