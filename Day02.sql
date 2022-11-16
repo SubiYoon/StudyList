@@ -161,10 +161,23 @@ SELECT deptno, job, COUNT(empno), SUM(sal), AVG(sal) FROM emp GROUP BY(deptno, j
 -- 분류 기준을 2개이상으로 둘 때는, 1차로 분류한 기준으로 rollup하고 전체통계 작업
 SELECT deptno, job, COUNT(empno), SUM(sal), AVG(sal) FROM emp GROUP BY ROLLUP(deptno, job) ORDER BY deptno, job;
 
--- 문제 1
+-- 문제 1 사원번호, 사원명, 담당업무, 입사일, 급여, 보너스, 지급액을 출력. 단, 지급액은 급여+보너스
 SELECT empno, ename, job, hiredate, sal, comm, sal+NVL(comm, 0) 지급액 FROM emp;
--- 문제 2
+-- 문제 2 사원명, 담당업무, 급여, 보너스 선택하되 급여 2500~4000 이거나 담당업무가 SALESMAN인 사원 급여의 내림차순으로 정렬하녀 레코드 선택
+--		 단, 보너스가 null인 경우 0으로 선택
 SELECT ename, job, sal, NVL(comm, 0) bonus FROM emp WHERE (sal BETWEEN 2500 AND 4000) OR job='SALESMAN' ORDER BY sal DESC;
 
+-- CUBE() : 1차 분류 또는 2차 분류에 대하여 통계를 구해줌
+-- 부서별 업무에 대한 사원수, 급여의 합계를 구하라.
+SELECT deptno, job, COUNT(empno) 사원수 , SUM(sal) "급여의 합계" FROM emp GROUP BY deptno, job ORDER BY deptno;
+SELECT deptno, job, COUNT(empno) 사원수 , SUM(sal) "급여의 합계" FROM emp GROUP BY CUBE(deptno, job) ORDER BY deptno;
+
+-- grouping()
+-- group by로 통계가 계산된 경우는 0
+-- rollup이나 cube로 계산된 경우는 1을 반환
+
+-- 부서별 각 업무에 대한 사원수, 급여합계, 최고급여 선택
+SELECT deptno, job, COUNT(empno) 사원수, SUM(sal) 급여합계, MAX(sal) 최고급여, GROUPING(deptno) DEPT, GROUPING(job) JOB
+FROM emp GROUP BY CUBE(deptno, job) ORDER BY deptno;  
 
 SELECT * FROM emp;					
