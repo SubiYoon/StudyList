@@ -118,6 +118,11 @@ VALUES (mem_sq.NEXTVAL, 'Do it 개발 10년 강의 10년 명강사의 기초 튼
 INSERT INTO book (bno, bname, b_publish, cate)
 VALUES (mem_sq.NEXTVAL, '그린전동자동차기사 필기 한권으로 끝내기', 'SD에듀', 'CAR');
 
+INSERT INTO book (bno, bname, b_publish, cate)
+VALUES (mem_sq.NEXTVAL, '비전공자를 위한 이해할 수 있는 IT지식', 'T.W.I.G', 'IT');
+
+
+
 SELECT * FROM book;
 
 select mem_sq.CURRVAL FROM dual;
