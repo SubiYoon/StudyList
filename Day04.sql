@@ -300,7 +300,7 @@ CREATE Table book_tbl(
 	writedate date default sysdate
 );
 
-CREATE table pub_code(
+CREATE table pub_tbl(
 	pub_code number(5) primary key,
 	pub_tel varchar2(15),
 	pub_email varchar2(100),
@@ -309,7 +309,7 @@ CREATE table pub_code(
 	writedate date default sysdate
 );
 
-CREATE table author_code(
+CREATE table author_tbl(
 	author_code number(5) primary key,
 	author varchar2(30) not null,
 	author_email varchar2(100),
@@ -324,6 +324,6 @@ SELECT * FROM emp;
 SELECT * FROM emp2;
 INSERT INTO emp(empno, ename) VALUES(7900, 'DDDD');
 SELECT * FROM book_tbl;
-SELECT * FROM PUB_CODE;
-SELECT * FROM AUTHOR_CODE;
+SELECT * FROM PUB_tbl;
+SELECT * FROM AUTHOR_tbl;
 SELECT * FROM book;
