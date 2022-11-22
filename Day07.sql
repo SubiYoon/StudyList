@@ -109,7 +109,7 @@ SELECT e.empno, e.ename, e.sal, d.dname, d.loc
 FROM (SELECT empno, ename, sal, deptno FROM emp WHERE job='SALESMAN') e
 JOIN dept d ON e.deptno = d.deptno;
 
--- NON Equi Join : 학점, 등급, 호봉 등 벙위가 있는 데이터를 조인할 때
+-- NON Equi Join : 학점, 등급, 호봉 등 범위가 있는 데이터를 조인할 때
 --				   1:1 매칭이 되지 않는 데이터 조인
 -- 사원명, 급여, 호봉(grade)을 선택
 SELECT e.ename, e.sal, s.grade FROM emp e
