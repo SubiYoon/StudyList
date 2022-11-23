@@ -152,7 +152,14 @@ INSERT INTO book_tbl (isbn, book_name, price, gerne, author_code, pub_code, writ
 VALUES (book_sq.nextval, '몽고DB', 80000, 'database', 3, 1, sysdate);
 
 -- 1. 테이블 2개로 조인문제 만들어 풀기
+-- 책이름, 작가이메일 출력
+SELECT b.book_name 책이름, a.author_email 이메일 FROM book_tbl b
+JOIN author_tbl a ON b.author_code=a.author_code; 
+
 -- 2. 테이블 3개로 조인문제 만들어 풀기
+-- 책이름, 작가명, 출판사명, 출판사 대표 출력
+SELECT b.book_name 책이름, a.author 작가명, p.publisher 출판사명, p.pub_owner 대표이름 FROM book_tbl b
+JOIN author_tbl a ON b.author_code=a.author_code JOIN pub_tbl p ON b.pub_code=p.pub_code;
 
 -- self 조인(자기자신을 조인)
 SELECT * FROM emp;
