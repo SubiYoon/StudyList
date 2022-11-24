@@ -102,7 +102,6 @@ CALL emp_list(7839);
 
 -- 사원등록하는 프로시저 만들기
 -- 사원번호, 이름, 부서번호들 입력받아 사원등록하기
-
 CREATE OR REPLACE PROCEDURE emp_insert(i_empno emp.empno%TYPE, i_ename emp.ename%TYPE, i_deptno emp.deptno%TYPE)
 IS	--변수선언이 꼭 필요한것은 아님
 BEGIN 
@@ -112,5 +111,30 @@ BEGIN
 END;
 
 CALL emp_insert(8888, 'tttt', 40);
+
+
+-- out parameter : 프로시저에서 처리결과 프로시저 외부로 내보냄
+-- 사원번호를 입력받아 사원명, 급여를 내보내는 프로시저 작성
+CREATE OR REPLACE PROCEDURE emp_find(i_empno IN emp.empno%TYPE, o_ename OUT emp.ename%TYPE, o_sal OUT emp.sal%TYPE)
+AS 
+BEGIN 
+	SELECT ename, sal INTO o_ename, o_sal FROM emp WHERE empno=i_empno;
+END;
+
+-- 변수선언하기
+-- 사원명을 받을 변수
+variable f_ename varchar2;
+-- 급여를 받을 변수
+variable f_sal number;
+SELECT * FROM db WHERE Db = ${f_ename};
+SELECT * FROM db WHERE Db = ${f_sal};
+
+call emp_find(7788, :f_ename, :f_sal);
+
+SELECT * FROM EMPLOYEE ;
+
+SELECT * FROM emp;
+
+
 
 SELECT * FROM emp;
