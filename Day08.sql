@@ -126,8 +126,6 @@ END;
 variable f_ename varchar2;
 -- 급여를 받을 변수
 variable f_sal number;
-SELECT * FROM db WHERE Db = ${f_ename};
-SELECT * FROM db WHERE Db = ${f_sal};
 
 call emp_find(7788, :f_ename, :f_sal);
 
