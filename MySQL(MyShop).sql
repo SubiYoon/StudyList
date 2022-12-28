@@ -29,7 +29,7 @@ CREATE TABLE product(p_num INT NOT NULL,
 					c_num INT NOT NULL,
                     p_name VARCHAR(30) NOT NULL,
                     p_price INT NOT NULL,
-                    p_text LONGBLOB NOT NULL,
+                    p_text LONGTEXT NOT NULL,
                     p_date DATETIME NOT NULL DEFAULT NOW());
 CREATE TABLE cart(cart_num INT NOT NULL,
 					id VARCHAR(10) NOT NULL,
