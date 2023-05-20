@@ -1,13 +1,10 @@
-import com.sun.net.httpserver.HttpServer;
-
-import java.io.*;
-import java.net.HttpURLConnection;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.URL;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.sql.Wrapper;
 import java.util.Arrays;
 
 public class Main {
@@ -21,10 +18,29 @@ public class Main {
                 // 받은 응답을 inputStream으로 받아옴
                 InputStream inputStream = socket.getInputStream();
                 // 받아온 데이터를 byte형식으로 저장
-                byte[] bytesArray = inputStream.readAllBytes();
+                // 읽어오는 양을 정해놓고 사용함(정적방법 - 메모리 이슈 가능성있음)
+//                byte[] buffer = new byte[1024];
+//                int read = inputStream.read(buffer);
+//                ByteArrayOutputStream by = new ByteArrayOutputStream();
+//                by.write(buffer, 0, read);
+//                byte[] bytesArray = by.toByteArray();
 
-                // Header의 마지막 index
+                // TODO:하나하나 읽어오면서 헤더 부분인지 확인하고 close해주도록 설정
+                byte[] bytesArray = new byte[Integer.MAX_VALUE];
+                // 헤더의 마지막 Index
                 int headerEndPoint = 0;
+                // 읽어낼 byte
+                int n,point1=0,point2=0,point3=0,point4=0;
+                while((n = inputStream.read()) != -1){
+                    bytesArray[headerEndPoint] = (byte)n;
+                    if(n == 13){
+                        point1 = n;
+                    }
+                    if(point1 == 13 && n == 10){
+                        point2 = n;
+                    }
+                    break;
+                }
 
                 for(int i=0; i<bytesArray.length; i++){
                     if(bytesArray[i]==13 && bytesArray[i+1]==10 && bytesArray[i+2]==13 && bytesArray[i+3]==10){
@@ -32,6 +48,7 @@ public class Main {
                         break;
                     }
                 }
+                // Header와 Body부분의 Btye를 답을 배열
                 byte[] headerByte = Arrays.copyOf(bytesArray,headerEndPoint);
                 byte[] bodyByte = Arrays.copyOfRange(bytesArray, headerEndPoint+4, bytesArray.length);
                 // Header추출
@@ -45,8 +62,11 @@ public class Main {
                 System.out.println("<Body>===========================\r\n" +
                         body +
                         "\r\n</Body>===========================");
-                //System.out.println("Charset.defaultCharset(): " + Charset.defaultCharset());
 
+                // Charset 확인용 print
+                System.out.println("Charset.defaultCharset(): " + Charset.defaultCharset());
+
+                // Header 분석하여 전달값 받기
                 String[] varFull = header.split(" ");
                 if(varFull[0].equals("GET") && varFull[1].contains("?")) {
                     String[] var = varFull[1].split("\\?");
@@ -56,16 +76,11 @@ public class Main {
                         System.out.println(var2[i]);
                     }
                 }else if(varFull[0].equals("POST")){
-                    System.out.println(body);
+                  //  System.out.println(body);
                 }
-
-                socket = serversocket.accept();
 
                 OutputStream out = socket.getOutputStream();
                 String msg = "";
-
-                msg += "<head>";
-                msg += "</head>";
                 msg += "<script type='text/javascript'>\r\n";
                 msg += "    function console_print(){\r\n";
                 msg += "        var id = document.getElementById('Id').value;\r\n";
@@ -74,7 +89,7 @@ public class Main {
                 msg += "</script>\r\n";
                 msg += "<body>\r\n";
                 msg += "    <input id='Id' type='text'/>\r\n";
-                msg += "    <a id='click' href='#' onclick='console_print()'>click</a>\r\n";
+                msg += "    <a id='click' href='#' onclick='console_print()'>click</a></br></br>\r\n";
                 msg += "    <form method='POST' action='/'>\r\n";
                 msg += "        <input type='text' name='sampleIdPost'/>\r\n";
                 msg += "        <input type='password' name='samplePwdPost'/>\r\n";
@@ -98,8 +113,6 @@ public class Main {
 
                 //화면 출력
                 out.flush();
-
-                socket.close();
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
