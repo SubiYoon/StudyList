@@ -6,6 +6,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.charset.Charset;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class Main {
     public static void main(String[] args) {
@@ -17,70 +19,96 @@ public class Main {
                 Socket socket = serversocket.accept();
                 // 받은 응답을 inputStream으로 받아옴
                 InputStream inputStream = socket.getInputStream();
-                // 받아온 데이터를 byte형식으로 저장
-                // 읽어오는 양을 정해놓고 사용함(정적방법 - 메모리 이슈 가능성있음)
-//                byte[] buffer = new byte[1024];
-//                int read = inputStream.read(buffer);
-//                ByteArrayOutputStream by = new ByteArrayOutputStream();
-//                by.write(buffer, 0, read);
-//                byte[] bytesArray = by.toByteArray();
-
-                // TODO:하나하나 읽어오면서 헤더 부분인지 확인하고 close해주도록 설정
-                byte[] bytesArray = new byte[Integer.MAX_VALUE];
+                // HTTP의 정보를 담을 byte 배열
+                byte[] totalReadByte = new byte[8000];    //Tomcat최대 제한 길이가 8K(Default) - 48k(최대)
                 // 헤더의 마지막 Index
                 int headerEndPoint = 0;
                 // 읽어낼 byte
-                int n,point1=0,point2=0,point3=0,point4=0;
-                while((n = inputStream.read()) != -1){
-                    bytesArray[headerEndPoint] = (byte)n;
-                    if(n == 13){
-                        point1 = n;
-                    }
-                    if(point1 == 13 && n == 10){
-                        point2 = n;
-                    }
-                    break;
-                }
-
-                for(int i=0; i<bytesArray.length; i++){
-                    if(bytesArray[i]==13 && bytesArray[i+1]==10 && bytesArray[i+2]==13 && bytesArray[i+3]==10){
-                        headerEndPoint = i;
+                int n;
+                // Header부분을 탐색할 point
+                int point1 = 0, point2 = 0, point3 = 0;
+                // Header부분 추출
+                while ((n = inputStream.read()) != -1) {
+                    totalReadByte[headerEndPoint++] = (byte) n;
+                    // Header부분 추출하면 break
+                    if (point1 == 13 && point2 == 10 && point3 == 13 && n == 10) {
                         break;
+                    } else if (point1 == 13 && point2 == 10 && n == 13) {
+                        point3 = 13;
+                    } else if (point1 == 13 && n == 10) {
+                        point2 = n;
+                    } else if (n == 13) {
+                        point1 = 13;
+                    } else {
+                        point1 = 0;
+                        point2 = 0;
+                        point3 = 0;
                     }
                 }
-                // Header와 Body부분의 Btye를 답을 배열
-                byte[] headerByte = Arrays.copyOf(bytesArray,headerEndPoint);
-                byte[] bodyByte = Arrays.copyOfRange(bytesArray, headerEndPoint+4, bytesArray.length);
-                // Header추출
-                String header = new String(headerByte);
-                // Body추출
-                String body = new String(bodyByte);
-                // Byte 배열 프린트
+                // header String으로 변환
+                String header = new String(Arrays.copyOf(totalReadByte, headerEndPoint));
+                // Header 프린트
                 System.out.println("<Header>=====================\r\n" +
                         header +
                         "\r\n</Header>=====================\r\n");
+
+                // Header 정보 배열로 변경
+                String[] headerInfo = header.split("\r\n");
+                // Header정보를 담을 Map
+                Map<String, String> headerData = new LinkedHashMap<String, String>();
+                // 첫번째 Row의 정보를 공백을 기준으로 자른 후 Map에 담음
+                String[] headerFirstRowInfo = headerInfo[0].split(" ");
+                headerData.put("Method", headerFirstRowInfo[0]);
+                headerData.put("URL", headerFirstRowInfo[1]);
+                headerData.put("Protocol", headerFirstRowInfo[2]);
+                // 두번째 이후의 정보를 ": "을 기준으로 자른 후 Map에 담음
+                for (int i = 1; i < headerInfo.length; i++) {
+                    if(headerInfo[i].contains(": ")) {
+                        String[] headerRowInfo = headerInfo[i].split(": ");
+                        headerData.put(headerRowInfo[0], headerRowInfo[1]);
+                    }
+                }
+
+                // Body의 데이터를 담을 Map
+                Map<String, String> bodyData = new LinkedHashMap<String, String>();
+                // Get방식일 경우 Body 정보 담기
+                if (headerData.get("Method").equals("GET") && headerData.get("URL").contains("?")) {
+                    String[] values = headerData.get("URL").replaceFirst("/\\?", "").split("&");
+                    parameterPut(values, bodyData);
+                }
+                // Post방식을 경우 Body 정보 담기
+                if (headerData.get("Method").equals("POST")) {
+                    // header에서 뽑아낸 body(Content의 길이)
+                    int contentLength = 0;
+                    if (headerData.get("Content-Length") != null && !headerData.get("Content-Length").isBlank()) {
+                        contentLength = Integer.parseInt(headerData.get("Content-Length"));
+                    }
+                    byte[] bodyByte = new byte[contentLength];
+                    for (int i = 0; i < contentLength; i++) {
+                        int b = inputStream.read();
+                        bodyByte[i] = (byte) b;
+                    }
+                    // Multipart Related MIME 타입 처리
+                    if(headerData.get("Content-Type").contains("application/x-www-form-urlencoded") || headerData.get("Content-Type").contains("Multipart/related")) {
+                        String body = new String(bodyByte);
+                        String[] values = body.split("&");
+                        // String으로 해석한 데이터를 Map에 넣어줌
+                        parameterPut(values, bodyData);
+
+                    }
+                }
+
+                // Body정보 출력
                 System.out.println("<Body>===========================\r\n" +
-                        body +
+                        bodyData +
                         "\r\n</Body>===========================");
 
                 // Charset 확인용 print
                 System.out.println("Charset.defaultCharset(): " + Charset.defaultCharset());
 
-                // Header 분석하여 전달값 받기
-                String[] varFull = header.split(" ");
-                if(varFull[0].equals("GET") && varFull[1].contains("?")) {
-                    String[] var = varFull[1].split("\\?");
-                    String[] var2 = var[1].split("&");
-                    System.out.println("==========GET방식!!==========");
-                    for(int i=0; i<var2.length; i++){
-                        System.out.println(var2[i]);
-                    }
-                }else if(varFull[0].equals("POST")){
-                  //  System.out.println(body);
-                }
-
-                OutputStream out = socket.getOutputStream();
+                OutputStream outputStream = socket.getOutputStream();
                 String msg = "";
+                msg += "<link rel='icon' href='data:,'/>\r\n";  //favicon.ico 를 로드하지 않게 설정
                 msg += "<script type='text/javascript'>\r\n";
                 msg += "    function console_print(){\r\n";
                 msg += "        var id = document.getElementById('Id').value;\r\n";
@@ -106,16 +134,36 @@ public class Main {
                 msg += "    </form>\r\n";
                 msg += "</body>\r\n";
 
-                out.write(new String("HTTP/1.1 200 OK\r\n").getBytes());
-                out.write(new String("Content-Length:" + msg.getBytes().length + "\r\n").getBytes());
-                out.write(new String("Content-Type:text/html,charset=UTF-8\r\n\r\n").getBytes());
-                out.write(msg.getBytes());
+                outputStream.write(new String("HTTP/1.1 200 OK\r\n").getBytes());
+                outputStream.write(new String("Content-Length:" + msg.getBytes().length + "\r\n").getBytes());
+                outputStream.write(new String("Content-Type:text/html,charset=UTF-8\r\n\r\n").getBytes());
+                outputStream.write(msg.getBytes());
 
                 //화면 출력
-                out.flush();
+                outputStream.flush();
+
+                inputStream.close();
+                outputStream.close();
+                socket.close();
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     *
+     * @param values - Body에서 날라온 데이터를 해석한 String들
+     * @param map - 해석한 String의 데이터를 삽입해줄 Map
+     */
+    public static void parameterPut(String[] values, Map map){
+        for (int i = 0; i < values.length; i++) {
+            String[] getParameter = values[i].split("=");
+            if (getParameter.length > 1) {
+                for (int j = 0; j < getParameter.length; j++) {
+                    map.put(getParameter[0], getParameter[1]);
+                }
+            }
         }
     }
 }
