@@ -4,6 +4,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.charset.CharsetEncoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -29,9 +31,17 @@ public class Main {
                 int n;
                 // Header부분을 탐색할 point
                 int point1 = 0, point2 = 0, point3 = 0;
+                // boundary부분을 탐색할 check
+                int check1 = 0, check2 = 0, check3 = 0, check4 = 0;
+                byte[] boundaryByte = new byte[100];
+                boundaryByte[0] = 45;
+                boundaryByte[1] = 45;
+                int off = 6;
+                boolean boundaryCheck = false;
                 // Header부분 추출
                 while ((n = inputStream.read()) != -1) {
                     totalReadByte[headerEndPoint++] = (byte) n;
+                    System.out.println(n);
                     // Header부분 추출하면 break
                     if (point1 == 13 && point2 == 10 && point3 == 13 && n == 10) {
                         break;
@@ -46,9 +56,40 @@ public class Main {
                         point2 = 0;
                         point3 = 0;
                     }
+                    if (!boundaryCheck) {
+                        if (check1 == 45 && check2 == 45 && check3 == 45 && check4 == 45) {
+                            boundaryByte[2] = 45;
+                            boundaryByte[3] = 45;
+                            boundaryByte[4] = 45;
+                            boundaryByte[5] = 45;
+                            if (n == 13) {
+                                check1 = 0;
+                                check2 = 0;
+                                check3 = 0;
+                                check4 = 0;
+                                off = 6;
+                                boundaryCheck = true;
+                            }else {
+                                boundaryByte[off++] = (byte) n;
+                            }
+                        } else {
+                            if (check1 == 45 && check2 == 45 && check3 == 45 && n == 45) {
+                                check4 = 45;
+                            } else if (check1 == 45 && check2 == 45 && n == 45) {
+                                check3 = 45;
+                            } else if (check1 == 45 && n == 45) {
+                                check2 = 45;
+                            } else if (n == 45) {
+                                check1 = 45;
+                            } else {
+                                check1 = 0;
+                                check2 = 0;
+                                check3 = 0;
+                                check4 = 0;
+                            }
+                        }
+                    }
                 }
-                // 바운더리 이름을 바이트코드로 저장하기 위한 배열
-                byte[] boundaryNameByte = null;
                 // header String으로 변환
                 String header = new String(Arrays.copyOf(totalReadByte, headerEndPoint));
                 // Header 프린트
@@ -70,12 +111,28 @@ public class Main {
                         if (headerInfo[i].contains(": ")) {
                             String[] headerRowInfo = headerInfo[i].split(": ");
                             headerData.put(headerRowInfo[0], headerRowInfo[1]);
-                            if(headerRowInfo[1].contains("boundary")){
-                                String boundary = "--" + headerRowInfo[1].substring(headerRowInfo[1].indexOf("boundary=")+9, headerRowInfo[1].length());
+                            if (headerRowInfo[1].contains("boundary")) {
+                                String boundary = "--" + headerRowInfo[1].substring(headerRowInfo[1].indexOf("boundary=") + 9, headerRowInfo[1].length());
                                 headerData.put("boundaryName", boundary);
                             }
                         }
                     }
+                    // 바운더리 이름을 바이트코드로 저장하기 위한 배열
+                    byte[] boundaryNameByte = null;
+                    if (headerData.get("sec-ch-ua").contains("Chrome")) {
+                        boundaryNameByte = Arrays.copyOfRange(boundaryByte,0,40);
+                    } else if (headerData.get("sec-ch-ua").contains("Safari")) {
+                        boundaryNameByte = Arrays.copyOfRange(boundaryByte,0,40);
+                    } else if (headerData.get("sec-ch-ua").contains("FireFox")) {
+                        boundaryNameByte = Arrays.copyOfRange(boundaryByte,0,57);
+                    } else if (headerData.get("sec-ch-ua").contains("Apache")) {
+                        boundaryNameByte = Arrays.copyOfRange(boundaryByte,0,44);
+                    } else if (headerData.get("sec-ch-ua").contains("IE")) {
+                        boundaryNameByte = Arrays.copyOfRange(boundaryByte,0,42);
+                    } else if (headerData.get("sec-ch-ua").contains("curl")) {
+                        boundaryNameByte = Arrays.copyOfRange(boundaryByte,0,42);
+                    }
+
                     // Body의 데이터를 담을 Map
                     Map<String, String> bodyData = new LinkedHashMap<String, String>();
                     // Get방식일 경우 Body 정보 담기
@@ -93,13 +150,13 @@ public class Main {
                         if (headerData.get("Content-Length") != null && !headerData.get("Content-Length").isBlank()) {
                             contentLength = Integer.parseInt(headerData.get("Content-Length"));
                         }
-                        byte[] bodyByte = new byte[contentLength];
-                        for (int i = 0; i < contentLength; i++) {
-                            int b = inputStream.read();
-                            bodyByte[i] = (byte) b;
-                        }
                         // Multipart Related MIME 타입 처리
                         if (headerData.get("Content-Type").contains("application/x-www-form-urlencoded") || headerData.get("Content-Type").contains("Multipart/related")) {
+                            byte[] bodyByte = new byte[contentLength];
+                            for (int i = 0; i < contentLength; i++) {
+                                int b = inputStream.read();
+                                bodyByte[i] = (byte) b;
+                            }
                             String body = new String(bodyByte);
                             String[] values = body.split("&");
                             // String으로 해석한 데이터를 Map에 넣어줌
@@ -108,8 +165,13 @@ public class Main {
                         }
                         // Multipart/form-data 타입 처리
                         else if (headerData.get("Content-Type").contains("form-data")) {
+                            byte[] bodyByte = new byte[contentLength];
+                            for (int i = 0; i < contentLength; i++) {
+                                int b = inputStream.read();
+                                bodyByte[i] = (byte) b;
+                            }
                             Map<String, String> boundaryHeaderData = new LinkedHashMap<String, String>();
-                            String str = new String(bodyByte);
+                            byte[] boundaryNameByteCode = headerData.get("boundaryName").getBytes();
                             // TODO: 여기부터 밑에까지 잠시 묶음
                             for (int i = 0; i < bodyByte.length; i++) {
                                 // 바운더리 바디 첫번째 부분 체크
@@ -214,7 +276,7 @@ public class Main {
                             msg += "        <li><a href='" + headerData.get("URL").substring(0, cutURL + 1) + "'>../</a></li>\r\n";
                             for (int i = 0; i < folderList.length; i++) {
                                 if (folderList[i].contains(".pdf")) {
-                                    msg += "        <li><a href='" + folderList[i].substring(0, folderList[i].length()-1) + "'>" + folderList[i].substring(0, folderList[i].length()-1) + "</a></li>\r\n";
+                                    msg += "        <li><a href='" + folderList[i].substring(0, folderList[i].length() - 1) + "'>" + folderList[i].substring(0, folderList[i].length() - 1) + "</a></li>\r\n";
                                 } else if (folderList[i].substring(folderList[i].length() - 1, folderList[i].length()).equals("*")) {
                                     msg += "        <li><a href='" + folderList[i].substring(0, folderList[i].length() - 1) + "' download>" + folderList[i] + "</a></li>\r\n";
                                 } else if (folderList[i].substring(folderList[i].length() - 1, folderList[i].length()).equals("/")) {
