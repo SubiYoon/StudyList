@@ -1,11 +1,7 @@
-import javax.print.DocFlavor;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.URL;
 import java.nio.charset.Charset;
-import java.nio.charset.CharsetEncoder;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -21,6 +17,7 @@ public class Main {
             while (true) {
                 // 응답 대기
                 Socket socket = serversocket.accept();
+                socket.setSoTimeout(3000);
                 // 받은 응답을 inputStream으로 받아옴
                 InputStream inputStream = socket.getInputStream();
                 // HTTP의 정보를 담을 byte 배열
@@ -41,7 +38,6 @@ public class Main {
                 // Header부분 추출
                 while ((n = inputStream.read()) != -1) {
                     totalReadByte[headerEndPoint++] = (byte) n;
-                    System.out.println(n);
                     // Header부분 추출하면 break
                     if (point1 == 13 && point2 == 10 && point3 == 13 && n == 10) {
                         break;
@@ -69,7 +65,7 @@ public class Main {
                                 check4 = 0;
                                 off = 6;
                                 boundaryCheck = true;
-                            }else {
+                            } else {
                                 boundaryByte[off++] = (byte) n;
                             }
                         } else {
@@ -95,7 +91,7 @@ public class Main {
                 // Header 프린트
                 System.out.println("<Header>=====================\r\n" +
                         header +
-                        "\r\n</Header>=====================\r\n");
+                        "\r\n</Header>=====================");
                 if (header.length() > 10) {
                     // Header 정보 배열로 변경
                     String[] headerInfo = header.split("\r\n");
@@ -117,21 +113,6 @@ public class Main {
                             }
                         }
                     }
-                    // 바운더리 이름을 바이트코드로 저장하기 위한 배열
-                    byte[] boundaryNameByte = null;
-                    if (headerData.get("sec-ch-ua").contains("Chrome")) {
-                        boundaryNameByte = Arrays.copyOfRange(boundaryByte,0,40);
-                    } else if (headerData.get("sec-ch-ua").contains("Safari")) {
-                        boundaryNameByte = Arrays.copyOfRange(boundaryByte,0,40);
-                    } else if (headerData.get("sec-ch-ua").contains("FireFox")) {
-                        boundaryNameByte = Arrays.copyOfRange(boundaryByte,0,57);
-                    } else if (headerData.get("sec-ch-ua").contains("Apache")) {
-                        boundaryNameByte = Arrays.copyOfRange(boundaryByte,0,44);
-                    } else if (headerData.get("sec-ch-ua").contains("IE")) {
-                        boundaryNameByte = Arrays.copyOfRange(boundaryByte,0,42);
-                    } else if (headerData.get("sec-ch-ua").contains("curl")) {
-                        boundaryNameByte = Arrays.copyOfRange(boundaryByte,0,42);
-                    }
 
                     // Body의 데이터를 담을 Map
                     Map<String, String> bodyData = new LinkedHashMap<String, String>();
@@ -142,9 +123,23 @@ public class Main {
                     }
                     // multipart/form-data boundary의 body의 시작,끝 체크를 위한 index
                     int boundaryBodyStartCheckPoint = 0;
-                    int boundaryBodyEndCheckPointPoint = 0;
                     // Post방식을 경우 Body 정보 담기
                     if (headerData.get("Method").equals("POST")) {
+                        // 바운더리 이름을 바이트코드로 저장하기 위한 배열
+                        byte[] boundaryNameByte = null;
+                        if (headerData.get("sec-ch-ua").contains("Chrome")) {
+                            boundaryNameByte = Arrays.copyOfRange(boundaryByte, 0, 40);
+                        } else if (headerData.get("sec-ch-ua").contains("Safari")) {
+                            boundaryNameByte = Arrays.copyOfRange(boundaryByte, 0, 40);
+                        } else if (headerData.get("sec-ch-ua").contains("FireFox")) {
+                            boundaryNameByte = Arrays.copyOfRange(boundaryByte, 0, 57);
+                        } else if (headerData.get("sec-ch-ua").contains("Apache")) {
+                            boundaryNameByte = Arrays.copyOfRange(boundaryByte, 0, 44);
+                        } else if (headerData.get("sec-ch-ua").contains("IE")) {
+                            boundaryNameByte = Arrays.copyOfRange(boundaryByte, 0, 42);
+                        } else if (headerData.get("sec-ch-ua").contains("curl")) {
+                            boundaryNameByte = Arrays.copyOfRange(boundaryByte, 0, 42);
+                        }
                         // header에서 뽑아낸 body(Content의 길이)
                         int contentLength = 0;
                         if (headerData.get("Content-Length") != null && !headerData.get("Content-Length").isBlank()) {
@@ -161,60 +156,90 @@ public class Main {
                             String[] values = body.split("&");
                             // String으로 해석한 데이터를 Map에 넣어줌
                             parameterPut(values, bodyData);
-                            ;
+
                         }
                         // Multipart/form-data 타입 처리
                         else if (headerData.get("Content-Type").contains("form-data")) {
-                            byte[] bodyByte = new byte[contentLength];
-                            for (int i = 0; i < contentLength; i++) {
-                                int b = inputStream.read();
-                                bodyByte[i] = (byte) b;
+                            byte[] bodyByte;
+                            byte[] splitPoint;
+                            byte[] buff = new byte[contentLength*2];
+                            int boundaryStartPoint = 0;
+                            int boundaryEndPoint = 0;
+                            int len = 4096;
+                            int off2 = 0;
+                            int num;
+                            while ((num =inputStream.read(buff, off2, len)) != -1) {
+                                off2 += num;
+                                System.out.println(num);
+//                                if(num < len){
+//                                    break;
+//                                }
                             }
-                            Map<String, String> boundaryHeaderData = new LinkedHashMap<String, String>();
-                            byte[] boundaryNameByteCode = headerData.get("boundaryName").getBytes();
-                            // TODO: 여기부터 밑에까지 잠시 묶음
-                            for (int i = 0; i < bodyByte.length; i++) {
-                                // 바운더리 바디 첫번째 부분 체크
-                                if (bodyByte[i] == 13 && bodyByte[i + 1] == 10 && bodyByte[i + 2] == 13 && bodyByte[i + 3] == 10) {
-                                    byte[] boundaryHeader = Arrays.copyOf(bodyByte, i + 4);
-                                    boundaryBodyStartCheckPoint = i + 4;    // boundaryBody 시작부분
-                                    String parseBoundaryHeader = new String(boundaryHeader);
-                                    System.out.println("=============boundaryHeader=============\r\n" +
-                                            parseBoundaryHeader +
-                                            "=============boundaryHeader=============\r\n"
-                                    );
-                                    // 바운더리 헤더 부분 formData Map에 데이터 삽입
-                                    String[] strs = parseBoundaryHeader.split("\r\n");
-                                    for (int k = 1; k < strs.length; k++) {
-                                        if (k == 1) {
-                                            String[] str2 = strs[k].split("; ");
-                                            for (int t = 1; t < str2.length; t++) {
-                                                String[] str3 = str2[t].split("=");
-                                                boundaryHeaderData.put(str3[0], str3[1].substring(1, str3[1].length() - 1));
+                            bodyByte = Arrays.copyOf(buff, off2);
+                            boolean charCheck = false;
+                            for (int i = 0; i < contentLength; i++) {
+                                if (bodyByte[i] == 45 && bodyByte[i+1] == 45 && bodyByte[i+2] == 45 && bodyByte[i+3] == 45 && bodyByte[i+4] == 45) {
+                                    charCheck = true;
+                                }
+                                if (charCheck && i >= boundaryNameByte.length) {
+                                    splitPoint = Arrays.copyOfRange(bodyByte, i - boundaryNameByte.length, i);
+                                    //바운더리 이름에 걸리면 작업 시작
+                                    if (Arrays.equals(splitPoint, boundaryNameByte)) {
+                                        if (boundaryStartPoint == 0) {
+                                            boundaryStartPoint = i + 1;
+                                            charCheck = false;
+                                        } else if (boundaryEndPoint == 0) {
+                                            boundaryEndPoint = i - boundaryNameByte.length;
+                                            //같은거 i~from 기준으로 잘라서 카피
+                                            byte[] boundaryData = Arrays.copyOfRange(bodyByte, boundaryStartPoint, boundaryEndPoint);
+                                            Map<String, String> boundaryHeaderData = new LinkedHashMap<String, String>();
+                                            for (int j = 0; j < boundaryData.length; j++) {
+                                                //자른 배열들 각각 \r\n\r\n 기준으로 헤더와 바디를 나눔
+                                                if (boundaryData[j] == 13 && boundaryData[j + 1] == 10 && boundaryData[j + 2] == 13 && boundaryData[j + 3] == 10) {
+                                                    byte[] boundaryHeader = Arrays.copyOf(boundaryData, j + 4);
+                                                    boundaryBodyStartCheckPoint = j + 4;    // boundaryBody 시작부분
+                                                    String parseBoundaryHeader = new String(boundaryHeader);
+                                                    System.out.println("=============boundaryHeader=============\r\n" +
+                                                            parseBoundaryHeader +
+                                                            "=============boundaryHeader=============\r\n"
+                                                    );
+                                                    // 바운더리 헤더 부분 formData Map에 데이터 삽입
+                                                    String[] strs = parseBoundaryHeader.split("\r\n");
+                                                    for (int k = 0; k < strs.length; k++) {
+                                                        if (k == 0) {
+                                                            String[] str2 = strs[k].split("; ");
+                                                            for (int t = 1; t < str2.length; t++) {
+                                                                String[] str3 = str2[t].split("=");
+                                                                boundaryHeaderData.put(str3[0], str3[1].substring(1, str3[1].length() - 1));
+                                                            }
+                                                        } else {
+                                                            String[] strs2 = strs[k].split(": ");
+                                                            boundaryHeaderData.put(strs2[0], strs2[1]);
+                                                        }
+                                                    }
+                                                    break;
+                                                }
                                             }
-                                        } else {
-                                            String[] strs2 = strs[k].split(": ");
-                                            boundaryHeaderData.put(strs2[0], strs2[1]);
+                                            //바이트 쓰기
+                                            if (boundaryHeaderData.get("filename") != null
+                                                    && !boundaryHeaderData.get("filename").equals("")
+                                                    && !boundaryHeaderData.get("filename").isEmpty()
+                                                    && !boundaryHeaderData.get("filename").isBlank()) {
+                                                byte[] boundaryBodyData = Arrays.copyOfRange(boundaryData, boundaryBodyStartCheckPoint, boundaryEndPoint);
+                                                //File outFile = new File("/Users/dongsubyoon/Downloads/ServerRoot/download/" + boundaryHeaderData.get("filename"));  //Mac Path
+                                                File outFile = new File("C:\\Users\\Ulim\\Desktop\\Downloads\\ServerRoot\\download\\" + boundaryHeaderData.get("filename"));  //Window Path
+                                                FileOutputStream outputStream = new FileOutputStream(outFile);
+                                                outputStream.write(boundaryBodyData);
+                                                outputStream.close();
+                                                //새로운 바운더리 데이터 얻기 위해 초기화
+                                                boundaryStartPoint = i + 1; //현재 걸려있는 바운더리 이름 기준으로 그 다음번째 시작부분
+                                                boundaryEndPoint = 0;
+                                                charCheck = false;
+                                            }
                                         }
                                     }
-                                    break;
-                                }
-                                // 바운더리 바디 마지막 부분 체크
-                                if (bodyByte[bodyByte.length - i - 1] == 45
-                                        && bodyByte[bodyByte.length - i - 2] == 45
-                                        && bodyByte[bodyByte.length - i - 3] == 45
-                                        && bodyByte[bodyByte.length - i - 4] == 45
-                                        && bodyByte[bodyByte.length - i - 5] == 45
-                                        && bodyByte[bodyByte.length - i - 6] == 45) {
-                                    boundaryBodyEndCheckPointPoint = bodyByte.length - i - 7;
                                 }
                             }
-                            //TODO: 여기까지
-                            byte[] boundaryBodyData = Arrays.copyOfRange(bodyByte, boundaryBodyStartCheckPoint, boundaryBodyEndCheckPointPoint);
-                            File outFile = new File("/Users/dongsubyoon/Downloads/ServerRoot/download/" + boundaryHeaderData.get("filename"));
-                            FileOutputStream outputStream = new FileOutputStream(outFile);
-                            outputStream.write(boundaryBodyData);
-                            outputStream.close();
                         }
                     }
                     // Body정보 출력
@@ -227,9 +252,10 @@ public class Main {
 
                     OutputStream outputStream = socket.getOutputStream();
                     String msg = "";
-                    String serverRoot = "/Users/dongsubyoon/Downloads";
+                    //String serverRoot = "/Users/dongsubyoon/Downloads"; //Mac
+                    String serverRoot = "C:\\Users\\Ulim\\Desktop\\Downloads"; //Mac
                     if (headerData.get("Method").equals("GET") && headerData.get("URL").contains("serverRoot")) {
-                        File file = new File(serverRoot + headerData.get("URL"));
+                        File file = new File(serverRoot + headerData.get("URL").replace("/", "\\"));
                         if (!file.exists()) {
                             outputStream.write(new String("HTTP/1.1 404 Not Found\r\n").getBytes());
                             socket.close();
@@ -265,7 +291,8 @@ public class Main {
                         } else {
                             // directory
                             FileSerarch list = new FileSerarch();
-                            String[] folderList = list.searchAllFolderList(headerData.get("URL"));
+                            //String[] folderList = list.searchAllFolderList(headerData.get("URL"));   //Mac
+                            String[] folderList = list.searchAllFolderList(headerData.get("URL").replace("/", "\\"));   //Window
                             int cutURL = headerData.get("URL").substring(0, headerData.get("URL").length() - 1).lastIndexOf("/");
                             msg += "<meta charset='utf-8'>\r\n";
                             msg += "<link rel='icon' href='data:,'/>\r\n";  //favicon.ico 를 로드하지 않게 설정
@@ -275,6 +302,7 @@ public class Main {
                             msg += "    <ul>\r\n";
                             msg += "        <li><a href='" + headerData.get("URL").substring(0, cutURL + 1) + "'>../</a></li>\r\n";
                             for (int i = 0; i < folderList.length; i++) {
+
                                 if (folderList[i].contains(".pdf")) {
                                     msg += "        <li><a href='" + folderList[i].substring(0, folderList[i].length() - 1) + "'>" + folderList[i].substring(0, folderList[i].length() - 1) + "</a></li>\r\n";
                                 } else if (folderList[i].substring(folderList[i].length() - 1, folderList[i].length()).equals("*")) {
@@ -322,7 +350,7 @@ public class Main {
                         msg += "        <input type='file' name='sampleFile3'/>\r\n";
                         msg += "        <button>File_sumbit</button>\r\n";
                         msg += "    </form>\r\n";
-                        msg += "    <a href='/serverRoot/'>폴더 탐색</a>\r\n";  //TODO: 뒤에 / 안붙이면 왜??
+                        msg += "    <a href='/serverRoot/'>폴더 탐색</a>\r\n";
                         msg += "</body>\r\n";
                         outputStream.write(new String("HTTP/1.1 200 OK\r\n").getBytes());
                         outputStream.write(new String("Content-Length:" + msg.getBytes().length + "\r\n").getBytes());
@@ -337,7 +365,7 @@ public class Main {
                     socket.close();
                 }
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
@@ -355,5 +383,20 @@ public class Main {
                 }
             }
         }
+    }
+
+    public static String uniToKor(String uni) {
+        StringBuffer result = new StringBuffer();
+
+        for (int i = 0; i < uni.length(); i++) {
+            if (uni.charAt(i) == '\\' && uni.charAt(i + 1) == 'u') {
+                Character c = (char) Integer.parseInt(uni.substring(i + 2, i + 6), 16);
+                result.append(c);
+                i += 5;
+            } else {
+                result.append(uni.charAt(i));
+            }
+        }
+        return result.toString();
     }
 }

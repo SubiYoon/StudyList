@@ -2,7 +2,8 @@ import java.io.File;
 
 public class FileSerarch {
     public String[] searchAllFolderList(String folder) {
-        String path = "/Users/dongsubyoon/Downloads" + folder;
+        //String path = "/Users/dongsubyoon/Downloads" + folder;  //Mac Path
+        String path = "C:\\Users\\Ulim\\Desktop\\Downloads" + folder;  //Window Path
         File file = new File(path);
         String[] strs = file.list();
 
