@@ -9,15 +9,19 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class Main {
-    public static void main(String[] args) {
+public class MyServer extends Thread{
+    Socket socket;
+    public MyServer(Socket socket){
+        this.socket = socket;
+    }
+    @Override
+    public void run(){
         try {
             // 소켓 생성
-            ServerSocket serversocket = new ServerSocket(80);
-            while (true) {
+//            ServerSocket serversocket = new ServerSocket(80);
+           //while (true) {
                 // 응답 대기
-                Socket socket = serversocket.accept();
-                socket.setSoTimeout(3000);
+               // Socket socket = serversocket.accept();
                 // 받은 응답을 inputStream으로 받아옴
                 InputStream inputStream = socket.getInputStream();
                 // HTTP의 정보를 담을 byte 배열
@@ -125,21 +129,6 @@ public class Main {
                     int boundaryBodyStartCheckPoint = 0;
                     // Post방식을 경우 Body 정보 담기
                     if (headerData.get("Method").equals("POST")) {
-                        // 바운더리 이름을 바이트코드로 저장하기 위한 배열
-                        byte[] boundaryNameByte = null;
-                        if (headerData.get("sec-ch-ua").contains("Chrome")) {
-                            boundaryNameByte = Arrays.copyOfRange(boundaryByte, 0, 40);
-                        } else if (headerData.get("sec-ch-ua").contains("Safari")) {
-                            boundaryNameByte = Arrays.copyOfRange(boundaryByte, 0, 40);
-                        } else if (headerData.get("sec-ch-ua").contains("FireFox")) {
-                            boundaryNameByte = Arrays.copyOfRange(boundaryByte, 0, 57);
-                        } else if (headerData.get("sec-ch-ua").contains("Apache")) {
-                            boundaryNameByte = Arrays.copyOfRange(boundaryByte, 0, 44);
-                        } else if (headerData.get("sec-ch-ua").contains("IE")) {
-                            boundaryNameByte = Arrays.copyOfRange(boundaryByte, 0, 42);
-                        } else if (headerData.get("sec-ch-ua").contains("curl")) {
-                            boundaryNameByte = Arrays.copyOfRange(boundaryByte, 0, 42);
-                        }
                         // header에서 뽑아낸 body(Content의 길이)
                         int contentLength = 0;
                         if (headerData.get("Content-Length") != null && !headerData.get("Content-Length").isBlank()) {
@@ -160,20 +149,21 @@ public class Main {
                         }
                         // Multipart/form-data 타입 처리
                         else if (headerData.get("Content-Type").contains("form-data")) {
+                            // 바운더리 이름을 바이트코드로 저장하기 위한 배열
+                            byte[] boundaryNameByte = Arrays.copyOfRange(boundaryByte, 0, headerData.get("boundaryName").length());
                             byte[] bodyByte;
                             byte[] splitPoint;
                             byte[] buff = new byte[contentLength*2];
                             int boundaryStartPoint = 0;
                             int boundaryEndPoint = 0;
-                            int len = 4096;
+                            int len = 4096 < contentLength ? 4096 : contentLength;
                             int off2 = 0;
                             int num;
                             while ((num =inputStream.read(buff, off2, len)) != -1) {
                                 off2 += num;
-                                System.out.println(num);
-//                                if(num < len){
-//                                    break;
-//                                }
+                                if(num < len){
+                                    break;
+                                }
                             }
                             bodyByte = Arrays.copyOf(buff, off2);
                             boolean charCheck = false;
@@ -259,7 +249,7 @@ public class Main {
                         if (!file.exists()) {
                             outputStream.write(new String("HTTP/1.1 404 Not Found\r\n").getBytes());
                             socket.close();
-                            continue;
+                            //continue;
                         }
                         boolean isFile = file.isFile();
                         if (isFile) {
@@ -364,7 +354,7 @@ public class Main {
                     outputStream.close();
                     socket.close();
                 }
-            }
+            //}
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
