@@ -1,6 +1,7 @@
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.URLDecoder;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -91,7 +92,8 @@ public class MyServer extends Thread{
                     }
                 }
                 // header String으로 변환
-                String header = new String(Arrays.copyOf(totalReadByte, headerEndPoint));
+                String decodeingBeforeHeader = new String(Arrays.copyOf(totalReadByte, headerEndPoint));
+                String header = URLDecoder.decode(decodeingBeforeHeader, "UTF-8");
                 // Header 프린트
                 System.out.println("<Header>=====================\r\n" +
                         header +
@@ -168,7 +170,7 @@ public class MyServer extends Thread{
                             bodyByte = Arrays.copyOf(buff, off2);
                             boolean charCheck = false;
                             for (int i = 0; i < contentLength; i++) {
-                                if (bodyByte[i] == 45 && bodyByte[i+1] == 45 && bodyByte[i+2] == 45 && bodyByte[i+3] == 45 && bodyByte[i+4] == 45) {
+                                if (bodyByte[i] == 45 && bodyByte[i+1] == 45 && bodyByte[i+2] == 45 && bodyByte[i+3] == 45) {
                                     charCheck = true;
                                 }
                                 if (charCheck && i >= boundaryNameByte.length) {
@@ -216,8 +218,8 @@ public class MyServer extends Thread{
                                                     && !boundaryHeaderData.get("filename").isEmpty()
                                                     && !boundaryHeaderData.get("filename").isBlank()) {
                                                 byte[] boundaryBodyData = Arrays.copyOfRange(boundaryData, boundaryBodyStartCheckPoint, boundaryEndPoint);
-                                                //File outFile = new File("/Users/dongsubyoon/Downloads/ServerRoot/download/" + boundaryHeaderData.get("filename"));  //Mac Path
-                                                File outFile = new File("C:\\Users\\Ulim\\Desktop\\Downloads\\ServerRoot\\download\\" + boundaryHeaderData.get("filename"));  //Window Path
+                                                File outFile = new File("/Users/dongsubyoon/Downloads/ServerRoot/download/" + boundaryHeaderData.get("filename"));  //Mac Path
+//                                                File outFile = new File("C:\\Users\\Ulim\\Desktop\\Downloads\\ServerRoot\\download\\" + boundaryHeaderData.get("filename"));  //Window Path
                                                 FileOutputStream outputStream = new FileOutputStream(outFile);
                                                 outputStream.write(boundaryBodyData);
                                                 outputStream.close();
@@ -242,10 +244,11 @@ public class MyServer extends Thread{
 
                     OutputStream outputStream = socket.getOutputStream();
                     String msg = "";
-                    //String serverRoot = "/Users/dongsubyoon/Downloads"; //Mac
-                    String serverRoot = "C:\\Users\\Ulim\\Desktop\\Downloads"; //Mac
+                    String serverRoot = "/Users/dongsubyoon/Downloads"; //Mac
+//                    String serverRoot = "C:\\Users\\Ulim\\Desktop\\Downloads"; //Window
                     if (headerData.get("Method").equals("GET") && headerData.get("URL").contains("serverRoot")) {
-                        File file = new File(serverRoot + headerData.get("URL").replace("/", "\\"));
+                        File file = new File(serverRoot + headerData.get("URL"));   //Mac
+//                        File file = new File(serverRoot + headerData.get("URL").replace("/", "\\"));    //Window
                         if (!file.exists()) {
                             outputStream.write(new String("HTTP/1.1 404 Not Found\r\n").getBytes());
                             socket.close();
@@ -280,9 +283,8 @@ public class MyServer extends Thread{
                             }
                         } else {
                             // directory
-                            FileSerarch list = new FileSerarch();
-                            //String[] folderList = list.searchAllFolderList(headerData.get("URL"));   //Mac
-                            String[] folderList = list.searchAllFolderList(headerData.get("URL").replace("/", "\\"));   //Window
+                            String[] folderList = Util.searchAllFolderList(headerData.get("URL"));   //Mac
+//                            String[] folderList = list.searchAllFolderList(headerData.get("URL").replace("/", "\\"));   //Window
                             int cutURL = headerData.get("URL").substring(0, headerData.get("URL").length() - 1).lastIndexOf("/");
                             msg += "<meta charset='utf-8'>\r\n";
                             msg += "<link rel='icon' href='data:,'/>\r\n";  //favicon.ico 를 로드하지 않게 설정
@@ -306,7 +308,7 @@ public class MyServer extends Thread{
                             msg += "</body>\r\n";
                             outputStream.write(new String("HTTP/1.1 200 OK\r\n").getBytes());
                             outputStream.write(new String("Content-Length:" + msg.getBytes().length + "\r\n").getBytes());
-                            outputStream.write(new String("Content-Type:text/html,charset=UTF-8\r\n\r\n").getBytes());
+                            outputStream.write(new String("Content-Type:text/html\r\n\r\n").getBytes());
                         }
 
 
@@ -344,7 +346,7 @@ public class MyServer extends Thread{
                         msg += "</body>\r\n";
                         outputStream.write(new String("HTTP/1.1 200 OK\r\n").getBytes());
                         outputStream.write(new String("Content-Length:" + msg.getBytes().length + "\r\n").getBytes());
-                        outputStream.write(new String("Content-Type:text/html,charset=UTF-8\r\n\r\n").getBytes());
+                        outputStream.write(new String("Content-Type:text/html\r\n\r\n").getBytes());
                     }
                     outputStream.write(msg.getBytes());
 
