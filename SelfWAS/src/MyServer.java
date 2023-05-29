@@ -125,7 +125,7 @@ public class MyServer extends Thread{
                     // Get방식일 경우 Body 정보 담기
                     if (headerData.get("Method").equals("GET") && headerData.get("URL").contains("?")) {
                         String[] values = headerData.get("URL").replaceFirst("/\\?", "").split("&");
-                        parameterPut(values, bodyData);
+                        Util.parameterPut(values, bodyData);
                     }
                     // multipart/form-data boundary의 body의 시작,끝 체크를 위한 index
                     int boundaryBodyStartCheckPoint = 0;
@@ -146,7 +146,7 @@ public class MyServer extends Thread{
                             String body = new String(bodyByte);
                             String[] values = body.split("&");
                             // String으로 해석한 데이터를 Map에 넣어줌
-                            parameterPut(values, bodyData);
+                            Util.parameterPut(values, bodyData);
 
                         }
                         // Multipart/form-data 타입 처리
@@ -362,18 +362,4 @@ public class MyServer extends Thread{
         }
     }
 
-    /**
-     * @param values Body에서 날라온 데이터를 해석한 String들
-     * @param map    해석한 String의 데이터를 삽입해줄 Map
-     */
-    public static void parameterPut(String[] values, Map map) {
-        for (int i = 0; i < values.length; i++) {
-            String[] getParameter = values[i].split("=");
-            if (getParameter.length > 1) {
-                for (int j = 0; j < getParameter.length; j++) {
-                    map.put(getParameter[0], getParameter[1]);
-                }
-            }
-        }
-    }
 }

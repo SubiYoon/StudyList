@@ -1,4 +1,5 @@
 import java.io.File;
+import java.util.Map;
 
 public class Util {
 
@@ -20,5 +21,20 @@ public class Util {
             strs[i] += separator;
         }
         return strs;
+    }
+
+    /**
+     * @param values Body에서 날라온 데이터를 해석한 String들
+     * @param map    해석한 String의 데이터를 삽입해줄 Map
+     */
+    public static void parameterPut(String[] values, Map map) {
+        for (int i = 0; i < values.length; i++) {
+            String[] getParameter = values[i].split("=");
+            if (getParameter.length > 1) {
+                for (int j = 0; j < getParameter.length; j++) {
+                    map.put(getParameter[0], getParameter[1]);
+                }
+            }
+        }
     }
 }
