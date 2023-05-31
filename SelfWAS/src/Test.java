@@ -4,7 +4,6 @@ public class Test{
         Thread t2 = new ThreadFirst();
         t1.start();
         t2.start();
-
     }
     static class ThreadFirst extends Thread{
         @Override
