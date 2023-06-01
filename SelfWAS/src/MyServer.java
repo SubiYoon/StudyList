@@ -1,3 +1,7 @@
+import handler.MyHttpHandler;
+import http.MyHttpRequest;
+import http.MyHttpResponse;
+
 import java.io.*;
 import java.net.Socket;
 import java.net.URLDecoder;
@@ -8,13 +12,16 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Properties;
 
 public class MyServer implements Runnable {
-    Socket socket;
+    private Socket socket;
+    MyHttpRequest req;
+    MyHttpResponse res;
 
     public MyServer(Socket socket) {
         this.socket = socket;
+         req = new MyHttpRequest(socket);
+         res = new MyHttpResponse(socket);
     }
 
     @Override
@@ -23,13 +30,7 @@ public class MyServer implements Runnable {
                 Thread.currentThread().getName() +
                 "\r\n============================");
         try {
-            // 소켓 생성
-//            ServerSocket serversocket = new ServerSocket(80);
-            //while (true) {
-            // 응답 대기
-//                Socket socket = serversocket.accept();
-//                 받은 응답을 inputStream으로 받아옴
-            InputStream inputStream = socket.getInputStream();
+            InputStream inputStream = req.getInutStream();
             // HTTP의 정보를 담을 byte 배열
             byte[] totalReadByte = new byte[8000];    //Tomcat최대 제한 길이가 8K(Default) - 48k(최대)
             // 헤더의 마지막 Index
@@ -100,29 +101,12 @@ public class MyServer implements Runnable {
             String decodeingBeforeHeader = new String(Arrays.copyOf(totalReadByte, headerEndPoint));
             String header = URLDecoder.decode(decodeingBeforeHeader, "UTF-8");
 
-            // k=v
-            // uri=class
-            // /my=co.ulim.MyHandler
-//            Properties properties = new Properties();
-            //properties.load()
-//            new co.ulim.MyHandler()
-//            String className = properties.getProperty(uri);
-//            Class handlerClass = Class.forName(className);
-//            RequestHandler handler = (RequestHandler) handlerClass.getConstructor().newInstance(); // reflection
-//            handler.hanlde();
-//            RequestHandler handler = RequestHandlerFactory.getInstance(uri);
-//            handler.hanlde(req, res);
-
             if (header.length() <= 10) {
                 // Header 프린트
                 System.out.println("<Header>=====================\r\n" +
                         "살아있니??\r\n" +
                         "</Header>=====================");
             } else {
-                // Header 프린트
-                System.out.println("<Header>=====================\r\n" +
-                        header +
-                        "\r\n</Header>=====================");
                 // Header 정보 배열로 변경
                 String[] headerInfo = header.split("\r\n");
                 // Header정보를 담을 Map
@@ -143,7 +127,16 @@ public class MyServer implements Runnable {
                         }
                     }
                 }
+                // header파싱해서 request에 넣기
+                req.headerParsing(headerData);
 
+                if(headerData.get("Method").equals("GET")){
+                    MyHttpHandler handler = (MyHttpHandler) HttpHandlerFactory.getInstance(headerData.get("URL")).getConstructor().newInstance();
+                    handler.getHanlde(req, res);
+                }else {
+                    MyHttpHandler handler = (MyHttpHandler) HttpHandlerFactory.getInstance(headerData.get("URL")).getConstructor().newInstance();
+                    handler.postHandle(req, res);
+                }
                 // Body의 데이터를 담을 Map
                 Map<String, String> bodyData = new LinkedHashMap<String, String>();
                 // Get방식일 경우 Body 정보 담기

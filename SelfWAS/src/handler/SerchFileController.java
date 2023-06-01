@@ -5,15 +5,14 @@ import http.MyHttpResponse;
 
 import java.io.IOException;
 
-public class MainController implements MyHttpHandler{
+public class SerchFileController implements MyHttpHandler{
     @Override
     public void getHanlde(MyHttpRequest req, MyHttpResponse res) throws IOException {
-        System.out.println(req.toString());
 
     }
 
     @Override
     public void postHandle(MyHttpRequest req, MyHttpResponse res) throws IOException {
-        System.out.println(req.toString());
+
     }
 }
