@@ -10,8 +10,8 @@ public class Util {
      * @return 해당 폴더의 List
      */
     public static String[] searchAllFolderList(String folder) {
-        String path = "/Users/dongsubyoon/Downloads" + folder;  //Mac Path
-//        String path = "C:\\Users\\Ulim\\Desktop\\Downloads" + folder;  //Window Path
+//        String path = "/Users/dongsubyoon/Downloads" + folder;  //Mac Path
+        String path = "C:\\Users\\Ulim\\Desktop\\Downloads" + folder;  //Window Path
         File file = new File(path);
         String[] strs = file.list();
 
