@@ -1,3 +1,7 @@
+package handler;
+
+import base.AntPathMatcher;
+
 import java.io.*;
 import java.util.Enumeration;
 import java.util.Properties;
@@ -5,6 +9,7 @@ import java.util.Properties;
 public class HttpHandlerFactory {
     private static AntPathMatcher antPathMatcher = new AntPathMatcher();
     public static Class getInstance(String url){
+//        String propertiesPath = ""; //Mac Path
         String propertiesPath = "C:\\Users\\Ulim\\Desktop\\StudyList\\SelfWAS\\src\\url.properties";
         Properties properties = new Properties();
         File propertiesFile = new File(propertiesPath);

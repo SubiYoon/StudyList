@@ -7,6 +7,14 @@ import java.net.Socket;
 public class MyHttpResponse {
     private Socket socket;
 
+    public Socket getSocket() {
+        return socket;
+    }
+
+    public void setSocket(Socket socket) {
+        this.socket = socket;
+    }
+
     public MyHttpResponse (Socket socket){
         this.socket = socket;
     }

@@ -1,4 +1,4 @@
-/*
+package base;/*
  * Copyright 2002-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,11 +15,7 @@
  */
 
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -424,7 +420,7 @@ public class AntPathMatcher  {
     }
 
     /**
-     * Test whether a string matches against a pattern.
+     * base.Test whether a string matches against a pattern.
      * @param pattern the pattern to match against (never {@code null})
      * @param str the String which must be matched against the pattern (never {@code null})
      * @return {@code true} if the string matches against the pattern, or {@code false} otherwise
@@ -437,7 +433,7 @@ public class AntPathMatcher  {
 
     /**
      * Build or retrieve an {@link AntPathStringMatcher} for the given pattern.
-     * <p>The default implementation checks this AntPathMatcher's internal cache
+     * <p>The default implementation checks this base.AntPathMatcher's internal cache
      * (see {@link #setCachePatterns}), creating a new AntPathStringMatcher instance
      * if no cached copy is found.
      * <p>When encountering too many patterns to cache at runtime (the threshold is 65536),
@@ -609,7 +605,7 @@ public class AntPathMatcher  {
     /**
      * Given a full path, returns a {@link Comparator} suitable for sorting patterns in order of
      * explicitness.
-     * <p>This {@code Comparator} will {@linkplain java.util.List#sort(Comparator) sort}
+     * <p>This {@code Comparator} will {@linkplain List#sort(Comparator) sort}
      * a list so that more specific patterns (without URI templates or wild cards) come before
      * generic patterns. So given a list with the following patterns, the returned comparator
      * will sort this list so that the order will be as indicated.
@@ -727,7 +723,7 @@ public class AntPathMatcher  {
                             String name = this.variableNames.get(i - 1);
                             if (name.startsWith("*")) {
                                 throw new IllegalArgumentException("Capturing patterns (" + name + ") are not " +
-                                        "supported by the AntPathMatcher. Use the PathPatternParser instead.");
+                                        "supported by the base.AntPathMatcher. Use the PathPatternParser instead.");
                             }
                             String value = matcher.group(i);
                             uriTemplateVariables.put(name, value);

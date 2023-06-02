@@ -5,7 +5,7 @@ import java.io.InputStream;
 import java.net.Socket;
 import java.util.Map;
 
-public class MyHttpRequest {
+public class HttpPieRequest {
     private Socket socket;
     private String method;
     private String url;
@@ -31,11 +31,7 @@ public class MyHttpRequest {
     private String acceptEncoding;
     private String acceptLanguage;
     private String charset;
-    private byte[] boundaryByte;
-
-    public MyHttpRequest(Socket socket) {
-        this.socket = socket;
-    }
+    private Map<String, String> requestParam;
 
     public String getMethod() {
         return method;
@@ -221,14 +217,6 @@ public class MyHttpRequest {
         this.acceptLanguage = acceptLanguage;
     }
 
-    public byte[] getBoundaryByte() {
-        return boundaryByte;
-    }
-
-    public void setBoundaryByte(byte[] boundaryByte) {
-        this.boundaryByte = boundaryByte;
-    }
-
     public String getCharset() {
         return charset;
     }
@@ -237,22 +225,36 @@ public class MyHttpRequest {
         this.charset = charset;
     }
 
+    public Map<String, String> getRequestParam() {
+        return requestParam;
+    }
+
+    public void setRequestParam(Map<String, String> requestParam) {
+        this.requestParam = requestParam;
+    }
+
     /**
-     * InputStream 객체를 생성하여 반환하는 메서드
-     *
-     * @return InputStream객체를 반환
+     * 해당 socket을 가지고 객체를 생성하는 생성자
+     * @param socket 사용할 소켓
+     */
+    public HttpPieRequest(Socket socket){
+        this.socket = socket;
+    }
+
+    /**
+     * 생성한 소켓의 InputStream을 생성
+     * @return InputStream
      * @throws IOException
      */
-    public InputStream getInutStream() throws IOException {
+    public InputStream getInputStream() throws IOException {
         return socket.getInputStream();
     }
 
     /**
-     * HTTP헤더의 데이터를 파싱하는 메서드
-     *
-     * @param map 파싱을 할 목록이 담겨있는 map
+     * header부분 파싱해서 HttpPieRequest 변수에 설정
+     * @param map header정보가 담겨있는 map
      */
-    public void headerParsing(Map<String, String> map) {
+    public void headerDataParsing(Map<String, String> map){
         setMethod(map.get("Method"));
         setUrl(map.get("URL"));
         setProtocol(map.get("Protocol"));
@@ -287,6 +289,10 @@ public class MyHttpRequest {
         setCharset(map.get("Charset"));
     }
 
+    /**
+     * 모든 변수 정보 출력
+     * @return String
+     */
     @Override
     public String toString() {
         return  "<Header>=====================\r\n" +

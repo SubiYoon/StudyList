@@ -1,4 +1,4 @@
-/*
+package base;/*
  * Copyright 2002-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,20 +17,16 @@
 
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.Charset;
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Deque;
 import java.util.Enumeration;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.Set;
-import java.util.StringJoiner;
 import java.util.StringTokenizer;
 import java.util.TimeZone;
 import java.util.stream.Collectors;
@@ -110,10 +106,10 @@ public abstract class StringUtils {
      * <p>Note: this method returns {@code true} for a {@code CharSequence}
      * that purely consists of whitespace.
      * <p><pre class="code">
-     * StringUtils.hasLength(null) = false
-     * StringUtils.hasLength("") = false
-     * StringUtils.hasLength(" ") = true
-     * StringUtils.hasLength("Hello") = true
+     * base.StringUtils.hasLength(null) = false
+     * base.StringUtils.hasLength("") = false
+     * base.StringUtils.hasLength(" ") = true
+     * base.StringUtils.hasLength("Hello") = true
      * </pre>
      * @param str the {@code CharSequence} to check (may be {@code null})
      * @return {@code true} if the {@code CharSequence} is not {@code null} and has length
@@ -143,11 +139,11 @@ public abstract class StringUtils {
      * {@code CharSequence} is not {@code null}, its length is greater than
      * 0, and it contains at least one non-whitespace character.
      * <p><pre class="code">
-     * StringUtils.hasText(null) = false
-     * StringUtils.hasText("") = false
-     * StringUtils.hasText(" ") = false
-     * StringUtils.hasText("12345") = true
-     * StringUtils.hasText(" 12345 ") = true
+     * base.StringUtils.hasText(null) = false
+     * base.StringUtils.hasText("") = false
+     * base.StringUtils.hasText(" ") = false
+     * base.StringUtils.hasText("12345") = true
+     * base.StringUtils.hasText(" 12345 ") = true
      * </pre>
      * @param str the {@code CharSequence} to check (may be {@code null})
      * @return {@code true} if the {@code CharSequence} is not {@code null},
@@ -343,7 +339,7 @@ public abstract class StringUtils {
     }
 
     /**
-     * Test if the given {@code String} matches the given single character.
+     * base.Test if the given {@code String} matches the given single character.
      * @param str the {@code String} to check
      * @param singleCharacter the character to compare to
      * @since 5.2.9
@@ -353,7 +349,7 @@ public abstract class StringUtils {
     }
 
     /**
-     * Test if the given {@code String} starts with the specified prefix,
+     * base.Test if the given {@code String} starts with the specified prefix,
      * ignoring upper/lower case.
      * @param str the {@code String} to check
      * @param prefix the prefix to look for
@@ -365,7 +361,7 @@ public abstract class StringUtils {
     }
 
     /**
-     * Test if the given {@code String} ends with the specified suffix,
+     * base.Test if the given {@code String} ends with the specified suffix,
      * ignoring upper/lower case.
      * @param str the {@code String} to check
      * @param suffix the suffix to look for
@@ -377,7 +373,7 @@ public abstract class StringUtils {
     }
 
     /**
-     * Test whether the given string matches the given substring
+     * base.Test whether the given string matches the given substring
      * at the given index.
      * @param str the original string (or StringBuilder)
      * @param index the index in the original string to start matching against
