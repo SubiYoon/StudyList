@@ -1,2 +1,4 @@
 ## 15일차 x -> 1일차
 - 코드 개선을 위한 두번째 WAS 만들기
+## 2일차
+- handler, file, get, post 처리
