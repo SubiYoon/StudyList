@@ -5,10 +5,13 @@ import handler.HttpPieHandlerFactory;
 import http.HttpPieRequest;
 import http.HttpPieResponse;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.net.Socket;
+import java.net.URLDecoder;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -46,7 +49,7 @@ public class WebServer implements Runnable {
                 }
             }
             // 파싱할 header바이트 코드를 String으로 변환하여 Map에 삽입
-            String headerDataStr = new String(Arrays.copyOf(headerByteData, off));
+            String headerDataStr = URLDecoder.decode(new String(Arrays.copyOf(headerByteData, off)));
             if (headerDataStr.length() > 10) {
                 String[] headerDataStrArr = headerDataStr.split("\r\n");
                 Map<String, String> headerData = new LinkedHashMap<String, String>();
@@ -63,7 +66,6 @@ public class WebServer implements Runnable {
                             String boundary = "--" + rowData[1].substring(rowData[1].indexOf("boundary=") + 9, rowData[1].length());
                             headerData.put("boundaryName", boundary);
                         }
-
                     }
                 }
                 headerData.put("Charset", String.valueOf(Charset.defaultCharset()));
@@ -71,16 +73,35 @@ public class WebServer implements Runnable {
                 req.headerDataParsing(headerData);
 
                 // Get방식으로 날라온 Data 파싱 후 Map에 담기
-                if(req.getUrl().contains("?")){
+                if (req.getMethod().equals("GET") && req.getUrl().contains("?")) {
                     Map<String, String> requestParam = new LinkedHashMap<String, String>();
                     String[] getUrlData = req.getUrl().split("/\\?");
                     String[] getData = getUrlData[1].split("&");
-                    for(int i= 0; i<getData.length; i++){
+                    for (int i = 0; i < getData.length; i++) {
                         requestParam.put(getData[i].split("=")[0], getData[i].split("=")[1]);
                     }
                     req.setRequestParam(requestParam);
                 }
-
+                // Post방식으로 날라온 Data 파싱 후 Map에 담기
+                if (req.getMethod().equals("POST")) {
+                    if (req.getContentType().contains("form-data")) {
+                        Util.makeTempFile(req);
+                    } else {
+                        Map<String, String> requestParam = new LinkedHashMap<String, String>();
+                        byte[] postFormData = new byte[Integer.parseInt(req.getContentLength())];
+                        while (true) {
+                            in.read(postFormData, 0, Integer.parseInt(req.getContentLength()));
+                            if (in.available() < 1) {
+                                break;
+                            }
+                        }
+                        String[] postData = new String(postFormData).split("&");
+                        for (int i = 0; i < postData.length; i++) {
+                            requestParam.put(postData[i].split("=")[0], postData[i].split("=")[1]);
+                        }
+                        req.setRequestParam(requestParam);
+                    }
+                }
                 // handler실행
                 if (req.getMethod().equals("GET")) {
                     HttpPieHandler httpPieHandler = (HttpPieHandler) HttpPieHandlerFactory.getInstance(req.getUrl()).getConstructor().newInstance();
