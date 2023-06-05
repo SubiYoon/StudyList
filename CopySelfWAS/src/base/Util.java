@@ -18,8 +18,8 @@ public class Util {
      * @return 해당 폴더에 있는 list를 String 배열에 담아 return
      */
     public static String[] folderSearch(String folder){
-        String path = "/Users/dongsubyoon/Downloads" + folder;   //Mac Path
-//        String path = "C:\\Users\\Ulim\\Desktop\\Downloads" + folder;   //Window Path
+//        String path = "/Users/dongsubyoon/Downloads" + folder;   //Mac Path
+        String path = "C:\\Users\\Ulim\\Desktop\\Downloads" + folder;   //Window Path
         File file = new File(path);
         String[] fileList = file.list();
         for(int i=0; i<fileList.length; i++){
@@ -36,16 +36,20 @@ public class Util {
      */
     public static void makeTempFile(HttpPieRequest req) throws IOException {
         int n;
-        File tempFile = new File("/Users/dongsubyoon/Downloads/ServerRoot/temp/" + req.getBoundaryName() + ".tmp");    // Mac Temp Path
+        int lastArr;
+//        File tempFile = new File("/Users/dongsubyoon/Downloads/ServerRoot/temp/" + req.getBoundaryName() + ".tmp");    // Mac Temp Path
+        File tempFile = new File("C:\\Users\\Ulim\\Desktop\\Downloads\\ServerRoot\\temp\\"+ req.getBoundaryName() + ".tmp");    // Mac Temp Path
         FileOutputStream fos = new FileOutputStream(tempFile, true);
         byte[] bodyAllByte = new byte[4096];
         while((n = req.getInputStream().read(bodyAllByte, 0, 4096)) != -1){
             fos.write(bodyAllByte);
-            if(req.getInputStream().available() <= 4096){
-                req.getInputStream().read(bodyAllByte, 0, 4096);
+            if((lastArr = req.getInputStream().available()) <= 4096){
+                bodyAllByte = new byte[lastArr];
+                req.getInputStream().read(bodyAllByte, 0, lastArr);
                 fos.write(bodyAllByte);
                 break;
             }
+            System.out.println("돌고돌아");
         }
         //TODO: 파일로 만든 tmp파일을 boundary를 기준으로 나눔
 

@@ -12,7 +12,8 @@ public class FileSearchController implements HttpPieHandler {
         InputStream in = req.getInputStream();
         OutputStream out = res.getOutputStream();
 
-        String serverRoot = "/Users/dongsubyoon/Downloads"; //Mac Path
+//        String serverRoot = "/Users/dongsubyoon/Downloads"; //Mac Path
+        String serverRoot = "C:\\Users\\Ulim\\Desktop\\Downloads";    //Window Path
         File file = new File(serverRoot + req.getUrl());
         String msg = "";
         if (file.isFile()) {
@@ -23,8 +24,8 @@ public class FileSearchController implements HttpPieHandler {
             if(req.getUrl().contains(".pdf")){
                 out.write(new String("Content-Type:application/pdf\r\n\r\n").getBytes());
                 msg += "<meta charset='UTF-8'/>\r\n";
+                msg += "<link rel='icon' href='data:,'/>\r\n";
                 msg += "<title>" + req.getUrl().substring(req.getUrl().lastIndexOf("/")) + "</title>\r\n";
-                msg += "<link rel='icon' href='data:,'/>";
                 msg += "<body>";
                 out.write(msg.getBytes());
                 msg = "";   // msg 초기화
@@ -35,8 +36,8 @@ public class FileSearchController implements HttpPieHandler {
                 out.write(fileByte);
             }
         } else {
-            String[] folderList = Util.folderSearch(req.getUrl()); //Mac Path
-//        String[] folderList = Util.folderSearch(req.getUrl().replace("/", "\\"));   //Window Path
+//            String[] folderList = Util.folderSearch(req.getUrl()); //Mac Path
+        String[] folderList = Util.folderSearch(req.getUrl().replace("/", "\\"));   //Window Path
             int cutURL = req.getUrl().substring(0, req.getUrl().length() - 1).lastIndexOf("/");
             msg += "<meta charset='UTF-8'/>\r\n";
             msg += "<link rel='icon' href='data:,'/>\r\n";

@@ -45,6 +45,9 @@ public class FileUploadController implements HttpPieHandler{
 
     @Override
     public void postHandle(HttpPieRequest req, HttpPieResponse res) throws IOException {
+        res.getOutputStream().flush();
+        req.getInputStream().close();
+        res.getOutputStream().close();
 
     }
 }

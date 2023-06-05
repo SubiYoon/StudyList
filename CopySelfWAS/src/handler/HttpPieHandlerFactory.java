@@ -16,8 +16,8 @@ public class HttpPieHandlerFactory {
      */
     public static Class getInstance(String url){
         Class obj = null;
-        File propertiesFile = new File("/Users/dongsubyoon/Develop/StudyList/CopySelfWAS/src/url.properties");  //Mac Path
-//        File propertiesFile = new File("C:\\Users\\Ulim\\Desktop\\StudyList\\CopySelfWAS\\src\\url.properties");    //Window Path
+//        File propertiesFile = new File("/Users/dongsubyoon/Develop/StudyList/CopySelfWAS/src/url.properties");  //Mac Path
+        File propertiesFile = new File("C:\\Users\\Ulim\\Desktop\\StudyList\\CopySelfWAS\\src\\url.properties");    //Window Path
         Properties properties = new Properties();
 
         try {
