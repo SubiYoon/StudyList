@@ -32,6 +32,7 @@ public class FileSearchController implements HttpPieHandler {
                 out.write(fileByte);
                 msg += "</body>";
             }else {
+                msg += "<link rel='icon' href='data:,'/>\r\n";
                 out.write(new String("Content-Type:application/jpeg\r\n\r\n").getBytes());
                 out.write(fileByte);
             }

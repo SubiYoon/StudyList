@@ -15,8 +15,8 @@ public class RunWebServer {
             Socket socket;
             ExecutorService executorService = new ThreadPoolExecutor(
                     3,
-                    10,
-                    120,
+                    5,
+                    300,
                     TimeUnit.SECONDS,
                     new LinkedBlockingDeque<>(5)
             );
