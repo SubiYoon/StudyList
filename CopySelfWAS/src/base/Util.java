@@ -65,10 +65,8 @@ public class Util {
         int boundaryBodyStartPoint = 0;
         int boundaryBodyEndPoint = 0;
         FileInputStream fis = new FileInputStream(tempFile);
-
-        // tmp파일을 읽어 바이너리별 tmp파일을 만들 FIS
         FileInputStream partFile = null;
-        String varName ="";
+        String varName = "";
         int ectbyte = 0;
 //        TODO: 파일 이름이 있을 때 해당 바운더리의 body데이터 읽어서 임시파일 생성
         while ((n = fis.read(fileByte, 0, 4096)) != -1) {
@@ -77,19 +75,16 @@ public class Util {
                     if (boundaryHeaderPointCheck == 4) {
                         partFile = new FileInputStream(tempFile);
                         partFile.skip(boundaryStartPoint);
-                        String header = new String(partFile.readNBytes(i -boundaryNameByte.length + ectbyte));
+                        String header = new String(partFile.readNBytes(i - boundaryNameByte.length + ectbyte));
                         String[] headerRow = header.split("\r\n");
-//                        for(int ttt=0; ttt<headerRow.length; ttt++){
-//                            System.out.println(headerRow[ttt]);
-//                        }
                         String[] firstRow = headerRow[1].split("; ");
-                        for(int tt = 0; tt<firstRow.length; tt++){
-                            System.out.println(firstRow[tt]);
-                        }
                         // file Name매칭하여 추가
                         String[] name = firstRow[1].split("=");
                         String[] fileName = firstRow[2].split("=");
                         varName = name[1].substring(1, name[1].length() - 1);   // html에 name으로 정의되어있는 변수명을 명시 할 변수
+
+                        System.out.println(varName);
+
                         boundaryHeader.put(name[0], name[1].substring(1, name[1].length() - 1));
                         boundaryHeader.put(name[1].substring(1, name[1].length() - 1), fileName[1].substring(1, fileName[1].length() - 1));
                         // Content-Disposition 추가
@@ -102,7 +97,7 @@ public class Util {
                         System.out.println(boundaryHeader);
 
                         boundaryHeaderPointCheck = 0;
-                        boundaryBodyStartPoint += i;
+                        boundaryBodyStartPoint = boundaryStartPoint + i - boundaryNameByte.length + ectbyte;
                         isParse = true;
                         partFile.close();
                         break;
@@ -113,32 +108,55 @@ public class Util {
                     }
                 }
             }
-            if(isParse && init){
+            if (isParse && init) {
                 if (boundaryHeader.get(varName) != null
                         && !boundaryHeader.get(varName).equals("")
                         && !boundaryHeader.get(varName).isEmpty()
                         && !boundaryHeader.get(varName).isBlank()) {
-                    for (int i = 0; i < fileByte.length; i++) {
+                    for (int i = 0; i < fileByte.length-1; i++) {
                         if (fileByte[i] == 45 && fileByte[i + 1] == 45) {
-                            boundaryBodyEndPoint += i;
-                            ectbyte = 4096 - i;
-                            partFile = new FileInputStream(tempFile);
-                            partFile.skip(boundaryBodyStartPoint);
-                            File boundaryTempFile = new File("C:\\Users\\Ulim\\Desktop\\Downloads\\ServerRoot\\temp\\" + boundaryHeader.get("name") + ".tmp");
-                            FileOutputStream boundaryFos = new FileOutputStream(boundaryTempFile);
-                            boundaryFos.write(partFile.readNBytes(boundaryBodyEndPoint - boundaryBodyStartPoint));
-                            partFile.close();
-                            boundaryFos.close();
-                            varName ="";
-                            boundaryStartPoint = boundaryBodyEndPoint + boundaryNameByte.length;
-                            break;
+                            if ((fileByte[i + 39] == boundaryNameByte[boundaryNameByte.length - 1]) || (4096 - i < boundaryNameByte.length)) {
+                                boundaryBodyEndPoint += i;
+                                ectbyte = 4096 - i;
+                                partFile = new FileInputStream(tempFile);
+                                partFile.skip(boundaryBodyStartPoint);
+                                File boundaryTempFile = new File("C:\\Users\\Ulim\\Desktop\\Downloads\\ServerRoot\\temp\\" + boundaryHeader.get("name") + ".tmp");
+                                FileOutputStream boundaryFos = new FileOutputStream(boundaryTempFile);
+                                boundaryFos.write(partFile.readNBytes(boundaryBodyEndPoint - boundaryBodyStartPoint));
+                                partFile.close();
+                                boundaryFos.close();
+                                varName = "";
+                                boundaryStartPoint = boundaryBodyEndPoint + boundaryNameByte.length;
+                                isParse = false;
+                                break;
+                            } else if (fileByte[i + 38] == boundaryNameByte[boundaryNameByte.length - 1]) {
+                                i = 4096;     // index가 하나 짤려서 문제 발생
+                                boundaryBodyEndPoint += i;
+                                ectbyte = 4096 - i;
+                                partFile = new FileInputStream(tempFile);
+                                partFile.skip(boundaryBodyStartPoint);
+                                File boundaryTempFile = new File("C:\\Users\\Ulim\\Desktop\\Downloads\\ServerRoot\\temp\\" + boundaryHeader.get("name") + ".tmp");
+                                FileOutputStream boundaryFos = new FileOutputStream(boundaryTempFile);
+                                boundaryFos.write(partFile.readNBytes(boundaryBodyEndPoint - boundaryBodyStartPoint));
+                                partFile.close();
+                                boundaryFos.close();
+                                varName = "";
+                                boundaryStartPoint = boundaryBodyEndPoint + boundaryNameByte.length;
+                                isParse = false;
+                                break;
+                            }
                         }
                     }
+                    if(isParse){
+                        boundaryBodyEndPoint += 4096;
+                    }
+                } else {
+                    boundaryBodyEndPoint += 4096;
                 }
-                isParse = false;
+            } else {
+                boundaryBodyEndPoint += 4096;
             }
             init = true;
-            boundaryBodyEndPoint += 4096;
         }
     }
 }
