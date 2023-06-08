@@ -32,6 +32,15 @@ public class HttpPieRequest {
     private String acceptLanguage;
     private String charset;
     private Map<String, String> requestParam;
+    private Map<String, String> requestFile;
+
+    public Map<String, String> getRequestFile() {
+        return requestFile;
+    }
+
+    public void setRequestFile(Map<String, String> requestFile) {
+        this.requestFile = requestFile;
+    }
 
     public String getMethod() {
         return method;

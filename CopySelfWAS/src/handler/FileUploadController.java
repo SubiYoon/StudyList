@@ -26,6 +26,7 @@ public class FileUploadController implements HttpPieHandler{
         msg += "        <input id='file1' type='file' name='file1'/>\r\n";
         msg += "        <input id='file2' type='file' name='file2'/>\r\n";
         msg += "        <input id='file3' type='file' name='file3'/>\r\n";
+        msg += "        <input id='file4' type='file' name='file4'/>\r\n";
         msg += "        <a href='#' onclick='fileSubmit()'>파일 전송</a>\r\n";
         msg += "        </br>\r\n";
         msg += "        </br>\r\n";
@@ -57,10 +58,13 @@ public class FileUploadController implements HttpPieHandler{
         msg += "    };\r\n";
         msg += "</script>\r\n";
         msg += "<body>\r\n";
+        msg += "    <h1>파일 업로드 완료!!</h1 \r\n>";
+        msg += "    </br>\r\n";
         msg += "    <form id='file_upload_form' method='post' action='/fileUpload' enctype='multipart/form-data'>\r\n";
         msg += "        <input id='file1' type='file' name='file1'/>\r\n";
         msg += "        <input id='file2' type='file' name='file2'/>\r\n";
         msg += "        <input id='file3' type='file' name='file3'/>\r\n";
+        msg += "        <input id='file4' type='file' name='file4'/>\r\n";
         msg += "        <a href='#' onclick='fileSubmit()'>파일 전송</a>\r\n";
         msg += "        </br>\r\n";
         msg += "        </br>\r\n";
