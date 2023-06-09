@@ -63,127 +63,126 @@ public class Util {
         byte[] buff = new byte[4096];
         boolean isParse = false;
         boolean isDirect = false;
-        int skipPoint = bdNameByte.length;
+        int skipPoint = 0;
         int bdHeaderEndPoint = 0;
         int readCount = 0;
-        int cycleCount = 0;
         int bdNameCheckCount = 0;
         int off2 = 0;
-        int xxx = 0;
+        int skipPointAdd = 0;
+        int writeLength = 0;
         long LoofEndCheck = tempFile.length();
         String varName = "";
         ttt:
         while (true) {
-            FileInputStream fis = new FileInputStream(tempFile);
             if (LoofEndCheck - skipPoint < bdNameByte.length + 10) {
-                fis.close();
                 break;
             }
-            readCount = 0;
-            fis.skip(skipPoint);
-            while ((n = fis.read(buff, 0, 4096)) != -1) {
-                if (!isParse) {
-                    for (int i = 0; i < buff.length; i++) {
-                        xxx++;
-                        if (bdHeaderEndPoint == 4) {
-                            FileInputStream headerFis = new FileInputStream(tempFile);
-                            headerFis.skip(skipPoint);
-                            String headerStr = new String(headerFis.readNBytes(readCount));
-
-                            System.out.println(headerStr);
-
-                            String[] bdHeaderRow = headerStr.split("\r\n");
-                            String[] firstRow = bdHeaderRow[1].split("; ");
-                            varName = firstRow[1].split("=")[1].substring(1, firstRow[1].split("=")[1].length() - 1);
-                            bdHeader.put(varName + "-" + firstRow[0].split(": ")[0], firstRow[0].split(": ")[1]);
-                            bdHeader.put(firstRow[1].split("=")[0], firstRow[1].split("=")[1].substring(1, firstRow[1].split("=")[1].length() - 1));
-                            bdHeader.put(firstRow[1].split("=")[1].substring(1, firstRow[1].split("=")[1].length() - 1), firstRow[2].split("=")[1].substring(1, firstRow[2].split("=")[1].length() - 1));
-                            bdHeader.put(varName + "-" + bdHeaderRow[2].split(": ")[0], bdHeaderRow[2].split(": ")[1]);
-
-                            bdHeaderEndPoint = 0;
-                            isParse = true;
-                            headerFis.close();
-                            break;
-                        } else if (buff[i] == 13 || buff[i] == 10) {
-                            bdHeaderEndPoint++;
-                        } else {
-                            bdHeaderEndPoint = 0;
-                        }
-                        readCount++;
-                    }
-                    isDirect = true;
+            try (FileInputStream fis = new FileInputStream(tempFile);) {
+                if (skipPoint != 0) {
+                    fis.skip(skipPoint);
                 }
-                if (isParse
-                        && bdHeader.get(bdHeader.get("name")) != null
-                        && !bdHeader.get(bdHeader.get("name")).equals("")
-                        && !bdHeader.get(bdHeader.get("name")).isEmpty()) {
-                    if (isDirect) {
-                        for (int i = readCount; i < buff.length; i++) {
-                            if (bdNameCheckCount == bdNameByte.length) {
-                                cycleCount += i;
-                                File partFile = new File("C:\\Users\\Ulim\\Desktop\\Downloads\\ServerRoot\\temp\\" + bdHeader.get("name") + ".tmp");
-                                FileInputStream partFis = new FileInputStream(tempFile);
-                                partFis.skip(skipPoint + readCount);
-                                FileOutputStream partFos = new FileOutputStream(partFile);
-                                partFos.write(partFis.readNBytes(cycleCount - skipPoint - readCount));
-
-                                skipPoint = cycleCount + bdNameByte.length;
-                                isParse = false;
-                                bdNameCheckCount = 0;
-                                off2 = 0;
-
-                                partFis.close();
-                                partFos.close();
-                                continue ttt;
-                            } else if (buff[i] == bdNameByte[off2++]) {
-                                bdNameCheckCount++;
-                            } else {
-                                off2 = 0;
-                                bdNameCheckCount = 0;
-                            }
-                        }
-                    } else {
+                while ((n = fis.read(buff, 0, 4096)) != -1) {
+                    if (!isParse) {
+                        readCount = 0;
                         for (int i = 0; i < buff.length; i++) {
-                            if (bdNameCheckCount == bdNameByte.length) {
-                                cycleCount += i;
-                                File partFile = new File("C:\\Users\\Ulim\\Desktop\\Downloads\\ServerRoot\\temp\\" + bdHeader.get("name") + ".tmp");
-                                FileInputStream partFis = new FileInputStream(tempFile);
-                                partFis.skip(skipPoint + readCount);
-                                FileOutputStream partFos = new FileOutputStream(partFile);
-                                partFos.write(partFis.readNBytes(cycleCount - skipPoint - readCount));
+                            if (bdHeaderEndPoint == 4) {
+                                try (FileInputStream headerFis = new FileInputStream(tempFile);) {
+                                    headerFis.skip(skipPoint);
+                                    String headerStr = new String(headerFis.readNBytes(readCount));
 
-                                skipPoint = cycleCount + bdNameByte.length;
-                                isParse = false;
-                                bdNameCheckCount = 0;
-                                off2 = 0;
+                                    System.out.println(headerStr);
 
-                                partFis.close();
-                                partFos.close();
-                                continue ttt;
-                            } else if (buff[i] == bdNameByte[off2++]) {
-                                bdNameCheckCount++;
+                                    String[] bdHeaderRow = headerStr.split("\r\n");
+                                    String[] firstRow = bdHeaderRow[1].split("; ");
+                                    varName = firstRow[1].split("=")[1].substring(1, firstRow[1].split("=")[1].length() - 1);
+                                    bdHeader.put(varName + "-" + firstRow[0].split(": ")[0], firstRow[0].split(": ")[1]);
+                                    bdHeader.put(firstRow[1].split("=")[0], firstRow[1].split("=")[1].substring(1, firstRow[1].split("=")[1].length() - 1));
+                                    bdHeader.put(firstRow[1].split("=")[1].substring(1, firstRow[1].split("=")[1].length() - 1), firstRow[2].split("=")[1].substring(1, firstRow[2].split("=")[1].length() - 1));
+                                    bdHeader.put(varName + "-" + bdHeaderRow[2].split(": ")[0], bdHeaderRow[2].split(": ")[1]);
+
+                                    skipPoint += skipPointAdd;
+                                    skipPointAdd = 0;
+                                    bdHeaderEndPoint = 0;
+                                    isParse = true;
+                                }
+                                break;
+                            } else if (buff[i] == 13 || buff[i] == 10) {
+                                bdHeaderEndPoint++;
                             } else {
-                                off2 = 0;
-                                bdNameCheckCount = 0;
+                                bdHeaderEndPoint = 0;
+                            }
+                            readCount++;
+                            skipPointAdd++;
+                        }
+                        isDirect = true;
+                    }
+                    if (isParse
+                            && bdHeader.get(bdHeader.get("name")) != null
+                            && !bdHeader.get(bdHeader.get("name")).equals("")
+                            && !bdHeader.get(bdHeader.get("name")).isEmpty()) {
+                        if (isDirect) {
+                            for (int i = readCount; i < buff.length; i++) {
+                                writeLength++;
+                                if (bdNameCheckCount == bdNameByte.length) {
+                                    File partFile = new File("C:\\Users\\Ulim\\Desktop\\Downloads\\ServerRoot\\temp\\" + bdHeader.get("name") + ".tmp");
+                                    try (FileInputStream partFis = new FileInputStream(tempFile);
+                                    FileOutputStream partFos = new FileOutputStream(partFile);) {
+                                        partFis.skip(skipPoint);
+                                        partFos.write(partFis.readNBytes(writeLength - bdNameByte.length - 1));
+
+                                        skipPoint += writeLength - bdNameByte.length;
+                                        isParse = false;
+                                        bdNameCheckCount = 0;
+                                        off2 = 0;
+                                        writeLength = 0;
+
+                                    }
+                                    continue ttt;
+                                } else if (buff[i] == bdNameByte[off2++]) {
+                                    bdNameCheckCount++;
+                                } else {
+                                    off2 = 0;
+                                    bdNameCheckCount = 0;
+                                }
+                            }
+                        } else {
+                            for (int i = 0; i < buff.length; i++) {
+                                writeLength++;
+                                if (bdNameCheckCount == bdNameByte.length) {
+                                    File partFile = new File("C:\\Users\\Ulim\\Desktop\\Downloads\\ServerRoot\\temp\\" + bdHeader.get("name") + ".tmp");
+                                    try (FileInputStream partFis = new FileInputStream(tempFile);
+                                    FileOutputStream partFos = new FileOutputStream(partFile);) {
+                                        partFis.skip(skipPoint);
+                                        partFos.write(partFis.readNBytes(writeLength - bdNameByte.length - 1));
+
+                                        skipPoint += writeLength - bdNameByte.length;
+                                        isParse = false;
+                                        bdNameCheckCount = 0;
+                                        off2 = 0;
+                                        writeLength = 0;
+                                    }
+                                    continue ttt;
+                                } else if (buff[i] == bdNameByte[off2++]) {
+                                    bdNameCheckCount++;
+                                } else {
+                                    off2 = 0;
+                                    bdNameCheckCount = 0;
+                                }
                             }
                         }
                     }
+                    if (isParse
+                            && (bdHeader.get(bdHeader.get("name")).equals("")
+                            || bdHeader.get(bdHeader.get("name")).isEmpty()
+                            || bdHeader.get(bdHeader.get("name")) == null)) {
+                        isParse = false;
+                        bdNameCheckCount = 0;
+                        off2 = 0;
+                        skipPoint += 2;
+                        continue ttt;
+                    }
+                    isDirect = false;
                 }
-                //TODO: 스킵 포인트가 이상하다... 어떻게 해야 할까..??
-                if (isParse
-                        && (bdHeader.get(bdHeader.get("name")).equals("")
-                        || bdHeader.get(bdHeader.get("name")).isEmpty()
-                        || bdHeader.get(bdHeader.get("name")) == null)) {
-                    skipPoint = cycleCount + bdNameByte.length * 2 + readCount;
-                    isParse = false;
-                    bdNameCheckCount = 0;
-                    off2 = 0;
-                    cycleCount += xxx;
-                    xxx=0;
-                    continue ttt;
-                }
-                cycleCount += 4096;
-                isDirect = false;
             }
         }
         req.setRequestFile(bdHeader);

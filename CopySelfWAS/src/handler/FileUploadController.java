@@ -49,6 +49,8 @@ public class FileUploadController implements HttpPieHandler{
         InputStream in = req.getInputStream();
         OutputStream out = res.getOutputStream();
 
+        req.fileSave("C:\\Users\\Ulim\\Desktop\\Downloads\\ServerRoot\\FileUpload\\", "file1");
+
         String msg = "";
         msg += "<meta charset='UTF-8'/>\r\n";
         msg += "<link rel='icon' href='data:,'/>\r\n";

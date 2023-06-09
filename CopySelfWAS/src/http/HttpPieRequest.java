@@ -1,7 +1,6 @@
 package http;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.Socket;
 import java.util.Map;
 
@@ -296,6 +295,23 @@ public class HttpPieRequest {
         setAcceptLanguage(map.get("Accept-Language"));
         setBoundaryName(map.get("boundaryName"));
         setCharset(map.get("Charset"));
+    }
+
+    /**
+     * tmp파일을 읽어들여 저장하는 메서드
+     * @param path 파일을 저장할 위치 지정
+     * @param fileVar HTML태그의 input태그의 변수명
+     * @throws IOException
+     */
+    public void fileSave(String path, String fileVar) throws IOException{
+        File tmpFile = new File("C:\\Users\\Ulim\\Desktop\\Downloads\\ServerRoot\\temp\\" + fileVar + ".tmp");
+        FileInputStream fis = new FileInputStream(tmpFile);
+        File saveFile = new File(path + requestFile.get(fileVar));
+        FileOutputStream fos = new FileOutputStream(saveFile);
+        fos.write(fis.readAllBytes());
+        fis.close();
+        fos.close();;
+        tmpFile.delete();
     }
 
     /**
