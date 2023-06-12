@@ -1,8 +1,8 @@
 package http;
 
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.Socket;
+import java.nio.channels.FileLockInterruptionException;
 
 public class HttpPieResponse {
     private Socket socket;

@@ -50,6 +50,9 @@ public class FileUploadController implements HttpPieHandler{
         OutputStream out = res.getOutputStream();
 
         req.fileSave("C:\\Users\\Ulim\\Desktop\\Downloads\\ServerRoot\\FileUpload\\", "file1");
+        req.fileSave("C:\\Users\\Ulim\\Desktop\\Downloads\\ServerRoot\\FileUpload\\", "file2");
+        req.fileSave("C:\\Users\\Ulim\\Desktop\\Downloads\\ServerRoot\\FileUpload\\", "file3");
+        req.fileSave("C:\\Users\\Ulim\\Desktop\\Downloads\\ServerRoot\\FileUpload\\", "file4");
 
         String msg = "";
         msg += "<meta charset='UTF-8'/>\r\n";

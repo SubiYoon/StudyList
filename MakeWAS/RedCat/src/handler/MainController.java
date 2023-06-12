@@ -110,6 +110,8 @@ public class MainController implements HttpPieHandler {
         out.write(new String("HTTP/1.1 200 OK\r\n").getBytes());
         out.write(new String("Content-Length:" + msg.getBytes().length + "\r\n").getBytes());
         out.write(new String("Content-Type:text/html\r\n\r\n").getBytes());
+        // res.setStatus(200)
+        // res.setHeader("Content-Type", "text/html")
         out.write(msg.getBytes());
 
         out.flush();
