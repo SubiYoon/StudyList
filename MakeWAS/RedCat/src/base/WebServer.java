@@ -52,10 +52,9 @@ public class WebServer implements Runnable {
             String[] headerRow = headerStr.split("\r\n");
             for (int i = 0; i < headerRow.length; i++) {
                 if (i == 0) {
-                    String[] firstRow = headerRow[i].split(" ");
-                    headerData.put("Method", firstRow[0]);
-                    headerData.put("Url", firstRow[1]);
-                    headerData.put("Protocol", firstRow[2]);
+                    headerData.put("Method", headerRow[i].substring(0, headerRow[i].indexOf(" ")));
+                    headerData.put("Url", headerRow[i].substring(headerRow[i].indexOf(" ")+1, headerRow[i].lastIndexOf(" ")));
+                    headerData.put("Protocol", headerRow[i].substring(headerRow[i].lastIndexOf(" ")+1));
                 } else {
                     String[] row = headerRow[i].split(": ");
                     headerData.put(row[0], row[1]);

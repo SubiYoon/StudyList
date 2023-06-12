@@ -16,6 +16,7 @@ public class FileSearchController implements HttpPieHandler {
         String serverRoot = "C:\\Users\\Ulim\\Desktop\\Downloads";    //Window Path
         File file = new File(serverRoot + HttpPieRequest.httpHeader.get("Url"));
         String msg = "";
+        System.out.println(HttpPieRequest.httpHeader);
         if (file.isFile()) {
             FileInputStream fis = new FileInputStream(file);
             byte[] fileByte = fis.readAllBytes();
@@ -23,16 +24,8 @@ public class FileSearchController implements HttpPieHandler {
             out.write(new String("Content-Length:" + fileByte.length + "\r\n").getBytes());
             if(HttpPieRequest.httpHeader.get("Url").contains(".pdf")){
                 out.write(new String("Content-Type:application/pdf\r\n\r\n").getBytes());
-                msg += "<meta charset='UTF-8'/>\r\n";
-                msg += "<link rel='icon' href='data:,'/>\r\n";
-                msg += "<title>" + HttpPieRequest.httpHeader.get("Url").substring(HttpPieRequest.httpHeader.get("Url").lastIndexOf("/")) + "</title>\r\n";
-                msg += "<body>";
-                out.write(msg.getBytes());
-                msg = "";   // msg 초기화
                 out.write(fileByte);
-                msg += "</body>";
             }else {
-                msg += "<link rel='icon' href='data:,'/>\r\n";
                 out.write(new String("Content-Type:application/jpeg\r\n\r\n").getBytes());
                 out.write(fileByte);
             }
