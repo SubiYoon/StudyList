@@ -17,7 +17,10 @@ public class HttpPieHandlerFactory {
     public static Class getInstance(String url){
         Class obj = null;
 //        File propertiesFile = new File("/Users/dongsubyoon/Develop/StudyList/RedCat/src/url.properties");  //Mac Path
-        File propertiesFile = new File("C:\\Users\\Ulim\\Desktop\\StudyList\\MakeWAS\\RedCat\\src\\url.properties");    //Window Path
+        // java -Durl.mapping=c:/users/asldkfj/url.properties
+        String urlMappingPath = System.getProperty("url.mapping");
+//        File propertiesFile = new File("C:\\Users\\Ulim\\Desktop\\StudyList\\MakeWAS\\RedCat\\src\\url.properties");    //Window Path
+        File propertiesFile = new File(urlMappingPath);
         Properties properties = new Properties();
 
         try {

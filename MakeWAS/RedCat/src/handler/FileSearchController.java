@@ -16,18 +16,16 @@ public class FileSearchController implements HttpPieHandler {
         String serverRoot = "C:\\Users\\Ulim\\Desktop\\Downloads";    //Window Path
         File file = new File(serverRoot + HttpPieRequest.httpHeader.get("Url"));
         String msg = "";
-        System.out.println(HttpPieRequest.httpHeader);
         if (file.isFile()) {
-            FileInputStream fis = new FileInputStream(file);
-            byte[] fileByte = fis.readAllBytes();
-            out.write(new String("HTTP/1.1 200 OK\r\n").getBytes());
-            out.write(new String("Content-Length:" + fileByte.length + "\r\n").getBytes());
+//            FileInputStream fis = new FileInputStream(file);
+//            byte[] fileByte = fis.readAllBytes();
+            res.setStatus(200);
             if(HttpPieRequest.httpHeader.get("Url").contains(".pdf")){
-                out.write(new String("Content-Type:application/pdf\r\n\r\n").getBytes());
-                out.write(fileByte);
+                res.setContentType("application/pdf");
+                res.setFile(file);
             }else {
-                out.write(new String("Content-Type:application/jpeg\r\n\r\n").getBytes());
-                out.write(fileByte);
+                res.setContentType("application/jpeg");
+                res.setFile(file);
             }
         } else {
 //            String[] folderList = Util.folderSearch(req.getUrl()); //Mac Path
@@ -59,13 +57,12 @@ public class FileSearchController implements HttpPieHandler {
             msg += "   <a href='/'>처음으로</a>\r\n";
             msg += "</body>\r\n";
 
-            out.write(new String("HTTP/1.1 200 OK\r\n").getBytes());
-            out.write(new String("Content-Length:" + msg.getBytes().length + "\r\n").getBytes());
-            out.write(new String("Content-Type:text/html\r\n\r\n").getBytes());
+            res.setStatus(200);
+            res.setContentType("text/html");
         }
-        out.write(msg.getBytes());
+        res.setMassage(msg);
+        res.flush();
 
-        out.flush();
         in.close();
         out.close();
     }
@@ -75,3 +72,5 @@ public class FileSearchController implements HttpPieHandler {
 
     }
 }
+// java가 jar를 실행할 수 있는지 여부
+// Main 메서드가 있는 곳을 지시해주는 파일도 같이 jar로 묶어야함

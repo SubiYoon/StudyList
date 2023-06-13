@@ -45,10 +45,10 @@ public class GetSubmitController implements HttpPieHandler {
         msg += "    <a href='/'>처음으로</a>\r\n";
         msg += "</body>\r\n";
 
-        out.write(new String("HTTP/1.1 200 OK\r\n").getBytes());
-        out.write(new String("Content-Length:" + msg.getBytes().length + "\r\n").getBytes());
-        out.write(new String("Content-Type:text/html\r\n\r\n").getBytes());
-        out.write(msg.getBytes());
+        res.setStatus(200);
+        res.setContentType("text/html");
+        res.setMassage(msg);
+        res.flush();
 
         out.flush();
         in.close();
