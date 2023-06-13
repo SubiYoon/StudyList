@@ -4,6 +4,8 @@
       <root url="jar://$PROJECT_DIR$/myServer.jar!/" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/myServer.jar!/" />
+    </SOURCES>
   </library>
 </component>
