@@ -48,10 +48,16 @@ public class FileUploadController implements HttpPieHandler{
         InputStream in = req.getInputStream();
         OutputStream out = res.getOutputStream();
 
-        req.fileSave("C:\\Users\\Ulim\\Desktop\\Downloads\\ServerRoot\\FileUpload\\", "file1");
-        req.fileSave("C:\\Users\\Ulim\\Desktop\\Downloads\\ServerRoot\\FileUpload\\", "file2");
-        req.fileSave("C:\\Users\\Ulim\\Desktop\\Downloads\\ServerRoot\\FileUpload\\", "file3");
-        req.fileSave("C:\\Users\\Ulim\\Desktop\\Downloads\\ServerRoot\\FileUpload\\", "file4");
+        /* Mac Path */
+        req.fileSave("/Users/dongsubyoon/Develop/StudyList/MakeWAS/serverRoot/FileUpload/", "file1");
+        req.fileSave("/Users/dongsubyoon/Develop/StudyList/MakeWAS/serverRoot/FileUpload/", "file2");
+        req.fileSave("/Users/dongsubyoon/Develop/StudyList/MakeWAS/serverRoot/FileUpload/", "file3");
+        req.fileSave("/Users/dongsubyoon/Develop/StudyList/MakeWAS/serverRoot/FileUpload/", "file4");
+        /* Window Path */
+//        req.fileSave("C:\\Users\\Ulim\\Desktop\\Downloads\\ServerRoot\\FileUpload\\", "file1");
+//        req.fileSave("C:\\Users\\Ulim\\Desktop\\Downloads\\ServerRoot\\FileUpload\\", "file2");
+//        req.fileSave("C:\\Users\\Ulim\\Desktop\\Downloads\\ServerRoot\\FileUpload\\", "file3");
+//        req.fileSave("C:\\Users\\Ulim\\Desktop\\Downloads\\ServerRoot\\FileUpload\\", "file4");
 
         String msg = "";
         msg += "<meta charset='UTF-8'/>\r\n";

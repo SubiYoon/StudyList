@@ -12,8 +12,8 @@ public class FileSearchController implements HttpPieHandler {
         InputStream in = req.getInputStream();
         OutputStream out = res.getOutputStream();
 
-//        String serverRoot = "/Users/dongsubyoon/Downloads"; //Mac Path
-        String serverRoot = "C:\\Users\\Ulim\\Desktop\\Downloads";    //Window Path
+        String serverRoot = "/Users/dongsubyoon/Develop/StudyList/MakeWAS"; //Mac Path
+//        String serverRoot = "C:\\Users\\Ulim\\Desktop\\Downloads";    //Window Path
         File file = new File(serverRoot + HttpPieRequest.httpHeader.get("Url"));
         String msg = "";
         if (file.isFile()) {
@@ -28,8 +28,8 @@ public class FileSearchController implements HttpPieHandler {
                 res.setFile(file);
             }
         } else {
-//            String[] folderList = Util.folderSearch(req.getUrl()); //Mac Path
-        String[] folderList = Util.folderSearch(HttpPieRequest.httpHeader.get("Url").replace("/", "\\"));   //Window Path
+            String[] folderList = Util.folderSearch(HttpPieRequest.httpHeader.get("Url")); //Mac Path
+//        String[] folderList = Util.folderSearch(HttpPieRequest.httpHeader.get("Url").replace("/", "\\"));   //Window Path
             int cutURL = HttpPieRequest.httpHeader.get("Url").substring(0, HttpPieRequest.httpHeader.get("Url").length() - 1).lastIndexOf("/");
             msg += "<meta charset='UTF-8'/>\r\n";
             msg += "<link rel='icon' href='data:,'/>\r\n";

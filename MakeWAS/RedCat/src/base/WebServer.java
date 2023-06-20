@@ -91,6 +91,8 @@ public class WebServer implements Runnable {
                 }
             }
 
+            System.out.println(Thread.currentThread().getName());
+
             if (headerData.get("Method").equals("GET")) {
                 HttpPieHandler handler = (HttpPieHandler) HttpPieHandlerFactory.getInstance(headerData.get("Url")).getConstructor().newInstance();
                 handler.getHandle(req, res);
@@ -99,7 +101,6 @@ public class WebServer implements Runnable {
                 HttpPieHandler handler = (HttpPieHandler) HttpPieHandlerFactory.getInstance(headerData.get("Url")).getConstructor().newInstance();
                 handler.postHandle(req, res);
             }
-            socket.close();
         } catch (IOException | NoSuchMethodException e) {
             throw new RuntimeException(e);
         } catch (InvocationTargetException e) {

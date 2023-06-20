@@ -18,11 +18,14 @@ public class Util {
      * @return 해당 폴더에 있는 파일들
      */
     public static String[] folderSearch(String path) {
-        String searchFoler = "C:\\Users\\Ulim\\Desktop\\Downloads" + path;
+        System.out.println(HttpPieRequest.httpHeader.get("Url"));
+        String searchFoler = "/Users/dongsubyoon/Develop/StudyList/MakeWAS" + path;  //Mac Path
+//        String searchFoler = "C:\\Users\\Ulim\\Desktop\\Downloads" + path;  //Window Path
         File file = new File(searchFoler);
         String[] folderList = file.list();
         for (int i = 0; i < folderList.length; i++) {
-            String endPoint = new File(searchFoler + "\\" + folderList[i]).isDirectory() ? "/" : "*";
+            String endPoint = new File(searchFoler + "/" + folderList[i]).isDirectory() ? "/" : "*";    //Mac Path
+//            String endPoint = new File(searchFoler + "\\" + folderList[i]).isDirectory() ? "/" : "*";   //Window Path
             folderList[i] += endPoint;
         }
         return folderList;
@@ -36,7 +39,8 @@ public class Util {
     public static void makeTempFile(HttpPieRequest req) {
         int n;
         String partFileName = "";
-        File tempFile = new File("C:\\Users\\Ulim\\Desktop\\Downloads\\ServerRoot\\temp\\" + HttpPieRequest.httpHeader.get("BoundaryName") + ".tmp");
+        File tempFile = new File("/Users/dongsubyoon/Develop/StudyList/MakeWAS/serverRoot/temp/" + HttpPieRequest.httpHeader.get("BoundaryName") + ".tmp");   //Window Path
+//        File tempFile = new File("C:\\Users\\Ulim\\Desktop\\Downloads\\ServerRoot\\temp\\" + HttpPieRequest.httpHeader.get("BoundaryName") + ".tmp");   //Window Path
         try (
                 FileOutputStream fos = new FileOutputStream(tempFile, true);
         ) {
@@ -113,7 +117,8 @@ public class Util {
                             if (!isDirect) {
                                 for (int i = 0; i < buff.length; i++) {
                                     if (bdBodyCheck == boundaryNameByte.length) {
-                                        File file = new File("C:\\Users\\Ulim\\Desktop\\Downloads\\ServerRoot\\temp\\" + varName + ".tmp");
+                                        File file = new File("/Users/dongsubyoon/Develop/StudyList/MakeWAS/serverRoot/temp/" + varName + ".tmp"); //Mac Path
+//                                        File file = new File("C:\\Users\\Ulim\\Desktop\\Downloads\\ServerRoot\\temp\\" + varName + ".tmp"); //Window Path
                                         try (FileInputStream makePartFis = new FileInputStream(tempFile);
                                              FileOutputStream partFos = new FileOutputStream(file);) {
                                             makePartFis.skip(skip);
@@ -137,7 +142,8 @@ public class Util {
                             } else {
                                 for (int i = readCount; i < buff.length; i++) {
                                     if (bdBodyCheck == boundaryNameByte.length) {
-                                        File file = new File("C:\\Users\\Ulim\\Desktop\\Downloads\\ServerRoot\\temp\\" + varName + ".tmp");
+                                        File file = new File("/Users/dongsubyoon/Develop/StudyList/MakeWAS/serverRoot/temp/" + varName + ".tmp"); //Mac Path
+//                                        File file = new File("C:\\Users\\Ulim\\Desktop\\Downloads\\ServerRoot\\temp\\" + varName + ".tmp"); //Window Path
                                         try (FileInputStream makePartFis = new FileInputStream(tempFile);
                                              FileOutputStream partFos = new FileOutputStream(file);) {
                                             makePartFis.skip(skip);
