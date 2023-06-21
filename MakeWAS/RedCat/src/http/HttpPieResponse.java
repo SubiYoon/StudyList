@@ -47,6 +47,8 @@ public class HttpPieResponse {
         OutputStream out = socket.getOutputStream();
 
         out.write(status);
+        //Connection을 끊을 때 HTTP/1.1은 명시해 주어야한다..?
+//        out.write(new String("Connection:close\r\n").getBytes());
         if (file != null) {
             FileInputStream fis = new FileInputStream(file);
             byte[] fileByte = fis.readAllBytes();
@@ -59,7 +61,6 @@ public class HttpPieResponse {
             out.write(contentType);
             out.write(massage);
         }
-
     }
 
     /**
