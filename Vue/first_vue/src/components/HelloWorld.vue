@@ -1,13 +1,18 @@
-<script setup>
-defineProps({
-  msg: {
-    type: String,
-    required: true
-  }
-})
-var x = new Vue({
-    el:'.green'
-})
+<script>
+export default {
+    setup() {
+        defineProps({
+            msg: {
+                type: String,
+                required: true
+            }
+        })
+        var x = new Vue({
+            el: '.green'
+        })
+    }
+}
+
 </script>
 
 <template>
