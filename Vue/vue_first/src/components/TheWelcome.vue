@@ -1,10 +1,36 @@
-<script setup>
+<script>
 import WelcomeItem from './WelcomeItem.vue'
 import DocumentationIcon from './icons/IconDocumentation.vue'
 import ToolingIcon from './icons/IconTooling.vue'
 import EcosystemIcon from './icons/IconEcosystem.vue'
 import CommunityIcon from './icons/IconCommunity.vue'
 import SupportIcon from './icons/IconSupport.vue'
+import Props from "@/components/Props.vue";
+import { ref, reactive } from 'vue';
+
+export default {
+    components: {
+        WelcomeItem,
+        DocumentationIcon,
+        ToolingIcon,
+        EcosystemIcon,
+        CommunityIcon,
+        SupportIcon,
+        Props
+    },
+    setup(){
+        const list = ref([
+            {id : '0', naming : '김씨'},
+            {id : '0', naming : '박씨'},
+            {id : '0', naming : '이씨'},
+            {id : '0', naming : '하씨'},
+        ])
+        return {
+            list
+        }
+    }
+}
+
 </script>
 
 <template>
@@ -82,5 +108,9 @@ import SupportIcon from './icons/IconSupport.vue'
     As an independent project, Vue relies on community backing for its sustainability. You can help
     us by
     <a href="https://vuejs.org/sponsor/" target="_blank" rel="noopener">becoming a sponsor</a>.
+  </WelcomeItem>
+
+  <WelcomeItem>
+      <Props :user-name="list"></Props>
   </WelcomeItem>
 </template>
