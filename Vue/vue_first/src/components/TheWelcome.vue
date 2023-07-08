@@ -5,11 +5,15 @@ import ToolingIcon from './icons/IconTooling.vue'
 import EcosystemIcon from './icons/IconEcosystem.vue'
 import CommunityIcon from './icons/IconCommunity.vue'
 import SupportIcon from './icons/IconSupport.vue'
-import Props from "@/components/Props.vue";
+import Props from "@/components/HowToUseProps.vue";
 import { ref, reactive } from 'vue';
+import ReactiveSampleTest from "@/components/MakeReactiveFunction.vue";
+import ObjectTest from "@/components/HowToUseProxy.vue";
 
 export default {
     components: {
+        ObjectTest,
+        ReactiveSampleTest,
         WelcomeItem,
         DocumentationIcon,
         ToolingIcon,
@@ -112,5 +116,7 @@ export default {
 
   <WelcomeItem>
       <Props :user-name="list"></Props>
+      <reactive-sample-test/>
+      <object-test/>
   </WelcomeItem>
 </template>

@@ -2,7 +2,7 @@ import './assets/main.css'
 
 import { createApp } from 'vue'
 import { createRouter, createWebHashHistory} from 'vue-router';
-import Test from './components/Test.vue';
+import Test from './components/Note.vue';
 
 const routes = [
     { path: '/test', component : Test}

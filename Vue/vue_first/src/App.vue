@@ -1,7 +1,7 @@
 <script>
 import HelloWorld from './components/HelloWorld.vue'
 import TheWelcome from './components/TheWelcome.vue'
-import Test from './components/Test.vue'
+import Note from './components/Note.vue'
 import WelcomeItem from "@/components/WelcomeItem.vue";
 
 export default {
@@ -9,7 +9,7 @@ export default {
       WelcomeItem,
       HelloWorld,
       TheWelcome,
-      Test,
+      Note,
   },
 }
 </script>
@@ -24,7 +24,7 @@ export default {
   </header>
 
   <main>
-      <Test/>
+      <Note/>
     <TheWelcome />
   </main>
 </template>
