@@ -9,20 +9,22 @@ export default {
         // 객체를 key로 사용하기 위한 WeakMap
         const targetMap = new WeakMap;
         // Method를 동적으로 사용하기 위한 acctiveMethod
-        let acctiveMethod = null;
+        let activeMethod = null;
         // 해당 객체의 존재유무를 파악하여 생성여부 결정
         function track(target, key) {
-            let elementsMap = targetMap.get(target);
-            if (!elementsMap) {
-                targetMap.set(target, (elementsMap = new Map()));
-            }
+            if (activeMethod) {
+                let elementsMap = targetMap.get(target);
+                if (!elementsMap) {
+                    targetMap.set(target, (elementsMap = new Map()));
+                }
 
-            let element = elementsMap.get(key);
-            if (!element) {
-                elementsMap.set(key, (element = new Set()));
-            }
+                let element = elementsMap.get(key);
+                if (!element) {
+                    elementsMap.set(key, (element = new Set()));
+                }
 
-            element.add(acMethod);
+                element.add(activeMethod);
+            }
         }
         // 해당 객체를 실행(?)
         function trigger(target, key) {
@@ -33,7 +35,7 @@ export default {
             let element = elementsMap.get(key);
             if (element) {
                 element.forEach(method => {
-                    method();
+                    activeMethod();
                 })
             }
         }
@@ -57,11 +59,10 @@ export default {
             return new Proxy(target, handler);
         }
         function acMethod(method){
-            acctiveMethod = method;
-            method();
-            acctiveMethod = null;
+            activeMethod = method;
+            activeMethod();
+            activeMethod = null;
         }
-        debugger;
         let product = selfReactive({p : 5, q : 10})
         let total = 0;
         let method = () => {

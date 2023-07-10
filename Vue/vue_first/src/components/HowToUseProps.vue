@@ -10,9 +10,9 @@ export default {
     props: {
         userName : Array
     },
-    // setup(props){
-    //
-    // }
+    setup(props){
+
+    }
 }
 </script>
 
