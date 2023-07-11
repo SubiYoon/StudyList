@@ -34,8 +34,8 @@ export default {
             }
             let element = elementsMap.get(key);
             if (element) {
-                element.forEach(method => {
-                    activeMethod();
+                element.forEach((acMethod) => {
+                    acMethod();
                 })
             }
         }
@@ -58,6 +58,21 @@ export default {
             }
             return new Proxy(target, handler);
         }
+
+        function selfRef(raw) {
+            const r = {
+                get value() {
+                    track(r, 'value')
+                    return raw
+                },
+                set value(newVal) {
+                    raw = newVal
+                    trigger(r, 'value')
+                },
+            }
+            return r
+        }
+
         function acMethod(method){
             activeMethod = method;
             activeMethod();
@@ -65,18 +80,26 @@ export default {
         }
         let product = selfReactive({p : 5, q : 10})
         let total = 0;
-        let method = () => {
+        let salePrice = 0;
+
+        acMethod(() => {
             total = product.p * product.q;
-        }
-        method();
-        console.log(total);
-        product.p = 10;
-        console.log(total);
+        });
+        // 아래와 같이 total로 사용시 변경되는 값은 product.p이므로 slaePrice가 정상작동하지 않는다.
+        // acMethod(() => {
+        //     salePrice = total * 0.8;
+        // });
+        acMethod(() => {
+            salePrice = product.p * product.q * 0.8;
+        });
+
+        console.log('할인가 = ' + salePrice);
+        console.log('원가 = ' + total);
 
         function printll(){
-            console.log(total);
+            console.log('할인가 = ' + salePrice);
+            console.log('원가 = ' + total);
         }
-
         return {
             product,
             printll
