@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<style></style>
+<head>
+    <meta charset="UTF-8">
+    <title>Make Vue Core</title>
+    <script src="/javaScript/reactivity.js"></script>
+</head>
+<script>
+    const test = ref(10);
+    console.log(test.value);
+
+    let total2 = 0;
+    effect(() => {
+        total2 = test.value * 10;
+    })
+    console.log(total2);
+    test.value = 100;
+    console.log(total2);
+</script>
+<body>
+    <h1>나와라</h1>
+    <input type="text"/>
+</body>
+</html>
