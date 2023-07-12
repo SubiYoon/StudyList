@@ -17,9 +17,17 @@
     console.log(total2);
     test.value = 100;
     console.log(total2);
+
+    // 반응형 테스트를 위한 setNumber함수
+    function setNumber(){
+        test.value = document.getElementById("input_number").value;
+        console.log(total2);
+    }
 </script>
 <body>
     <h1>나와라</h1>
-    <input type="text"/>
+    <label>
+        <input id="input_number" type="text" oninput="setNumber()"/>
+    </label>
 </body>
 </html>

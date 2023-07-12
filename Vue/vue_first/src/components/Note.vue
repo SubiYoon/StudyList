@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import {ref, computed} from 'vue'
+import {nextTick, ref, computed} from 'vue'
 export default {
     name: "Test",
     setup(){
@@ -13,15 +13,43 @@ export default {
         const age = ref(20);
         const red = ref('red');
         const ok = ref(false);
+        let fullName = name.value + red.value;
+
+        console.log(fullName);
+        name.value = '김갑환';
+        //변경되지 않는다. computed를 사용하여 변경해야 변경된다.
+        console.log(fullName);
+        //다음과 같이 정의해주어야 name의 값이 변경될 때 해당 fullName도 변경이 된다.
+        fullName = computed(()=>{
+            return name.value + red.value;
+        })
+        console.log(fullName.value);
+        name.value = '발차기';
+        console.log(fullName.value);
+
         function 함수(변수){
             alert(age.value);
         }
         const addAge = function(){
             age.value++;
-            debugger;
         };
 
         console.log(age.value);
+
+        //nextTick Test
+        const message = ref('Hello');
+        const changeMessage = async newMessage => {
+            message.value = newMessage;
+            // DOM에서 얻은 값은 이전 값
+            await nextTick();
+            // nextTick이 업데이트된 후 DOM 값을 가져온다.
+            console.log(('Now DOM is updated'));
+
+        }
+        console.log(message.value);
+        changeMessage('어쩔건데');
+        console.log(message.value);
+
 
         return {
             name,
