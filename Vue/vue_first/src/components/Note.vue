@@ -2,6 +2,7 @@
   <p v-bind:id="red">이름 : {{!ok ? name : "숨김"}}</p>
   <button :disabled="ok" @click.prevent="함수('알림')">{{age}}</button>
   <button @click="addAge">나이먹기</button>
+    <button id="counter" @click="increment">{{ count }}</button>
 </template>
 
 <script>
@@ -41,7 +42,9 @@ export default {
         const changeMessage = async newMessage => {
             message.value = newMessage;
             // DOM에서 얻은 값은 이전 값
-            await nextTick();
+            await nextTick(()=>{
+               setTimeout(()=>console.log("테스트"), 5000);
+            });
             // nextTick이 업데이트된 후 DOM 값을 가져온다.
             console.log(('Now DOM is updated'));
 
@@ -50,6 +53,19 @@ export default {
         changeMessage('어쩔건데');
         console.log(message.value);
 
+        const count = ref(0)
+
+        function increment() {
+            count.value++
+
+            // DOM not yet updated
+            console.log(document.getElementById('counter').textContent) // 0
+
+            // DOM is now updated
+            nextTick(()=>{
+                console.log(document.getElementById('counter').textContent) // 1
+            })
+        }
 
         return {
             name,
@@ -57,7 +73,9 @@ export default {
             red,
             ok,
             함수,
-            addAge
+            addAge,
+            increment,
+            count
         }
     }
 }
