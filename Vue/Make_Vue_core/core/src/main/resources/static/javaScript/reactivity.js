@@ -127,3 +127,20 @@ Promise.resolve()
     });
 
 console.log('script end'); // E
+
+const myPromise = () => {
+    return new Promise((resolve, reject) => {
+        resolve('hihi');
+    })
+}
+// const mtPromise = () => Promise.resolve('hihi')
+
+const myFunc = async () => {
+    console.log('Inner function');
+    console.log(await myPromise());
+    console.log('goOut function');
+}
+
+console.log('Before function');
+myFunc();
+console.log('After function');
