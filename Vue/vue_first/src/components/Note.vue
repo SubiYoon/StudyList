@@ -2,7 +2,8 @@
   <p v-bind:id="red">이름 : {{!ok ? name : "숨김"}}</p>
   <button :disabled="ok" @click.prevent="함수('알림')">{{age}}</button>
   <button @click="addAge">나이먹기</button>
-    <button id="counter" @click="increment">{{ count }}</button>
+  <button id="counter" @click="increment">{{ count }}</button>
+  <Teleport to="body"></Teleport>
 </template>
 
 <script>
