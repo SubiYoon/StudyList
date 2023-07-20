@@ -3,6 +3,7 @@ import HelloWorld from './components/HelloWorld.vue'
 import TheWelcome from './components/TheWelcome.vue'
 import Note from './components/Note.vue'
 import WelcomeItem from "@/components/WelcomeItem.vue";
+import HowToUseSlot from "@/components/HowToUseSlot.vue";
 
 export default {
     components: {
@@ -10,6 +11,7 @@ export default {
         HelloWorld,
         TheWelcome,
         Note,
+        HowToUseSlot,
     },
 }
 </script>
@@ -24,8 +26,20 @@ export default {
     </header>
 
     <main>
+        <how-to-use-slot>
+            <template v-slot:slot_start>시작이야</template>
+            <template v-slot:slot_end>끝이야</template>
+        </how-to-use-slot>
         <Note/>
         <TheWelcome/>
+        <how-to-use-slot v-slot="test">
+            {{test.count}} {{test.text}} {{test.text2}}
+        </how-to-use-slot>
+        <how-to-use-slot v-slot="{text, text2, x , y}">
+            {{text}} {{text2}}
+            <br>
+            Mouse is at : {{x}}, {{y}}
+        </how-to-use-slot>
     </main>
 </template>
 
