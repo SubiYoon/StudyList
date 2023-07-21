@@ -4,14 +4,17 @@ import TheWelcome from './components/TheWelcome.vue'
 import Note from './components/Note.vue'
 import WelcomeItem from "@/components/WelcomeItem.vue";
 import HowToUseSlot from "@/components/HowToUseSlot.vue";
+import HowToUseBinding from "@/components/HowToUseBinding.vue";
 
 export default {
     components: {
+        HowToUseBinding,
         WelcomeItem,
         HelloWorld,
         TheWelcome,
         Note,
         HowToUseSlot,
+
     },
 }
 </script>
@@ -40,6 +43,7 @@ export default {
             <br>
             Mouse is at : {{x}}, {{y}}
         </how-to-use-slot>
+        <how-to-use-binding></how-to-use-binding>
     </main>
 </template>
 
