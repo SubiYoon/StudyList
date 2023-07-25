@@ -1,4 +1,5 @@
 <template>
+    <a >test</a>
   <div v-for="test, i in userName" :key="i">
       <h1> {{ test.naming }} </h1>
   </div>
@@ -14,7 +15,8 @@ export default {
         }
     },
     props: {
-        userName : {type: Array, default:{}}
+        userName : {type: Array, default:[]},
+        href: String,
     },
     created() {
         console.log(this.$data.msg)

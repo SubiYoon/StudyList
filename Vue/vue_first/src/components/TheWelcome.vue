@@ -8,6 +8,7 @@ import SupportIcon from './icons/IconSupport.vue'
 import Props from "@/components/HowToUseProps.vue";
 import { ref, reactive } from 'vue';
 import HowToUseProxy from "@/components/HowToUseProxy.vue";
+import HowToUseLoopIs from "@/components/HowToUseLoopIs.vue";
 
 export default {
     components: {
@@ -18,7 +19,8 @@ export default {
         EcosystemIcon,
         CommunityIcon,
         SupportIcon,
-        Props
+        Props,
+        HowToUseLoopIs
     },
     setup(){
         const list = ref([
@@ -28,7 +30,8 @@ export default {
             {id : '0', naming : '하씨'},
         ])
         return {
-            list
+            list,
+            a: '//www.naver.com'
         }
     }
 }
@@ -113,7 +116,12 @@ export default {
   </WelcomeItem>
 
   <WelcomeItem>
-      <Props :user-name="list"></Props>
+      <!--<Props :user-name="list"></Props>-->
       <how-to-use-proxy/>
+      <how-to-use-loop-is />
   </WelcomeItem>
+    <Props :href.prop="a" :user-name="list"></Props>
+  <a :href.prop="a">왓더</a>
+  <a :href.attr="'www.daum.net'" :href="a" >나나</a>
+  <a :href="a" :href.prop="'www.daum.net'" >나나</a>
 </template>
