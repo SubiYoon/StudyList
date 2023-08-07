@@ -6,10 +6,11 @@ import EcosystemIcon from './icons/IconEcosystem.vue'
 import CommunityIcon from './icons/IconCommunity.vue'
 import SupportIcon from './icons/IconSupport.vue'
 import Props from "@/components/HowToUseProps.vue";
-import { h, ref, reactive } from 'vue';
+import {h, ref, reactive} from 'vue';
 import HowToUseProxy from "@/components/HowToUseProxy.vue";
 import HowToUseLoopIs from "@/components/HowToUseLoopIs.vue";
 import HowToUseRenderFunctions from "@/components/HowToUseRenderFunctions.vue"
+import HowToUseDefineExpose from "@/components/HowToUseDefineExpose.vue";
 
 export default {
     components: {
@@ -22,17 +23,23 @@ export default {
         CommunityIcon,
         SupportIcon,
         Props,
-        HowToUseLoopIs
+        HowToUseLoopIs,
+        HowToUseDefineExpose
     },
-    setup(){
+    methods: {
+        handleClick() {
+            this.$refs.childRef.hello();
+        }
+    },
+    setup() {
         const list = ref([
-            {id : '0', naming : '김씨'},
-            {id : '0', naming : '박씨'},
-            {id : '0', naming : '이씨'},
-            {id : '0', naming : '하씨'},
+            {id: '0', naming: '김씨'},
+            {id: '0', naming: '박씨'},
+            {id: '0', naming: '이씨'},
+            {id: '0', naming: '하씨'},
         ])
 
-        h('div', { id: 'foo'}, 'Reset')
+        h('div', {id: 'foo'}, 'Reset')
 
         return {
             list,
@@ -45,14 +52,18 @@ export default {
 </script>
 
 <template>
-  <WelcomeItem>
-      <!--<Props :user-name="list"></Props>-->
-      <how-to-use-proxy/>
-      <how-to-use-loop-is />
-  </WelcomeItem>
+    <WelcomeItem>
+        <!--<Props :user-name="list"></Props>-->
+        <how-to-use-proxy/>
+        <how-to-use-loop-is/>
+    </WelcomeItem>
     <Props :href.prop="a" :user-name="list"></Props>
-  <a :href.prop="a">왓더</a>
-  <a :href.attr="'www.daum.net'" :href="a" >나나</a>
-  <a :href="a" :href.prop="'www.daum.net'" >나나</a>
-  <how-to-use-render-functions/>
+    <a :href.prop="a">왓더</a>
+    <a :href.attr="'www.daum.net'" :href="a">나나</a>
+    <a :href="a" :href.prop="'www.daum.net'">나나</a>
+    <how-to-use-render-functions/>
+    <div>
+        <how-to-use-define-expose ref="childRef" />
+        <button @click="handleClick">Say Hello</button>
+    </div>
 </template>
