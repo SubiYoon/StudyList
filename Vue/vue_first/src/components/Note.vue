@@ -1,4 +1,6 @@
 <template>
+    <how-to-use-var-in-tag></how-to-use-var-in-tag>
+    <how-to-use-define-expose ref="sampleTest"></how-to-use-define-expose>
   <p v-bind:id="red">이름 : {{!ok ? name : "숨김"}}</p>
   <button :disabled="ok" @click.prevent="함수('알림')">{{age}}</button>
   <button @click="addAge">나이먹기</button>
@@ -8,9 +10,18 @@
 
 <script>
 import {nextTick, ref, computed} from 'vue'
+import HowToUseVarInTag from "@/components/HowToUseVarInTag.vue";
+import HowToUseDefineExpose from "@/components/HowToUseDefineExpose.vue";
 export default {
     name: "Test",
+    components: {HowToUseDefineExpose, HowToUseVarInTag},
+    data(){
+        return {
+        }
+    },
     setup(){
+        //defineOptions로 다중 추출
+        console.log(HowToUseVarInTag.nameFoo);
         const name = ref("홍길동");
         const age = ref(20);
         const red = ref('red');

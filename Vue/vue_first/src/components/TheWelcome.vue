@@ -27,9 +27,9 @@ export default {
         HowToUseDefineExpose
     },
     methods: {
-        handleClick() {
-            this.$refs.childRef.hello();
-        }
+        //handleClick() {
+            //this.$refs.childRef.hello();
+        //}
     },
     setup() {
         const list = ref([
@@ -38,13 +38,19 @@ export default {
             {id: '0', naming: '이씨'},
             {id: '0', naming: '하씨'},
         ])
+        const childRef = ref(null)
 
         h('div', {id: 'foo'}, 'Reset')
+        const handleClick = () => {
+            childRef.value.hello()
+        }
 
         return {
             list,
             a: '//www.naver.com',
-            h
+            h,
+            childRef,
+            handleClick,
         }
     }
 }
