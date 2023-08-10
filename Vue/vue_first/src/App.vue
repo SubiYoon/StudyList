@@ -1,10 +1,10 @@
 <script>
 import HelloWorld from './components/HelloWorld.vue'
 import TheWelcome from './components/TheWelcome.vue'
-import Note from './components/Note.vue'
 import WelcomeItem from "@/components/WelcomeItem.vue";
 import HowToUseSlot from "@/components/HowToUseSlot.vue";
 import HowToUseBinding from "@/components/HowToUseBinding.vue";
+import {provide} from "vue";
 
 export default {
     components: {
@@ -12,10 +12,12 @@ export default {
         WelcomeItem,
         HelloWorld,
         TheWelcome,
-        Note,
         HowToUseSlot,
-
     },
+    setup() {
+        provide('App', "Hello, I'm App!!")
+        return{}
+    }
 }
 </script>
 
@@ -33,7 +35,6 @@ export default {
             <template v-slot:slot_start>시작이야</template>
             <template v-slot:slot_end>끝이야</template>
         </how-to-use-slot>
-        <Note/>
         <TheWelcome/>
         <how-to-use-slot v-slot="test">
             {{test.count}} {{test.text}} {{test.text2}}

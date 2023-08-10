@@ -11,6 +11,7 @@ import HowToUseProxy from "@/components/HowToUseProxy.vue";
 import HowToUseLoopIs from "@/components/HowToUseLoopIs.vue";
 import HowToUseRenderFunctions from "@/components/HowToUseRenderFunctions.vue"
 import HowToUseDefineExpose from "@/components/HowToUseDefineExpose.vue";
+import Note from "@/components/Note.vue";
 
 export default {
     components: {
@@ -24,7 +25,8 @@ export default {
         SupportIcon,
         Props,
         HowToUseLoopIs,
-        HowToUseDefineExpose
+        HowToUseDefineExpose,
+        Note
     },
     methods: {
         //handleClick() {
@@ -72,4 +74,5 @@ export default {
         <how-to-use-define-expose ref="childRef" />
         <button @click="handleClick">Say Hello</button>
     </div>
+    <Note/>
 </template>

@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import {nextTick, ref, computed} from 'vue'
+import {nextTick, ref, computed, inject} from 'vue'
 import HowToUseVarInTag from "@/components/HowToUseVarInTag.vue";
 import HowToUseDefineExpose from "@/components/HowToUseDefineExpose.vue";
 export default {
@@ -78,6 +78,20 @@ export default {
                 console.log(document.getElementById('counter').textContent) // 1
             })
         }
+
+        //어떤 부모의 것이건 자식이 다 받아 올 수 있다.
+        console.log(inject('App'))
+
+
+        class Factory {
+            name1 = 'Kim'
+            name2 = 'Kim'
+        }
+        //팩토리 함수를 사용 할 수도 있다.
+        const factory = inject('Factory', () => new Factory(), true)
+
+        console.log(factory)
+
 
         return {
             name,
