@@ -1,20 +1,13 @@
 import './assets/main.css'
 
 import { createApp } from 'vue'
-import { createRouter, createWebHashHistory} from 'vue-router';
-import Test from './components/Note.vue';
+// import { createRouter, createWebHashHistory} from 'vue-router';
+// import Note from './components/Note.vue';
+import router from "@/router";
+import App from "@/components/App.vue";
 
-const routes = [
-    { path: '/test', component : Test}
-];
+const app = createApp(App)
 
-const router = createRouter({
-    history: createWebHashHistory(),
-    routes,
-})
+app.use(router)
 
-import App from './App.vue';
-
-// App.use(router);
-
-createApp(App).mount('#app')
+app.mount('#app')

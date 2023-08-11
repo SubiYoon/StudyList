@@ -1,4 +1,5 @@
 <template>
+    <router-link to="/">Home으로 가자</router-link>
     <how-to-use-var-in-tag></how-to-use-var-in-tag>
     <how-to-use-define-expose ref="sampleTest"></how-to-use-define-expose>
   <p v-bind:id="red">이름 : {{!ok ? name : "숨김"}}</p>
@@ -13,7 +14,7 @@ import {nextTick, ref, computed, inject} from 'vue'
 import HowToUseVarInTag from "@/components/HowToUseVarInTag.vue";
 import HowToUseDefineExpose from "@/components/HowToUseDefineExpose.vue";
 export default {
-    name: "Test",
+    name: "Note",
     components: {HowToUseDefineExpose, HowToUseVarInTag},
     data(){
         return {

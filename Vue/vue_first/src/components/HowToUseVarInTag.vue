@@ -21,7 +21,6 @@
 
 <template>
     <h1 v-my-directive>다이렉트???</h1>
-    <h1>{{ nameFoo }}</h1>
     <how-to-use-define-expose ref="test"></how-to-use-define-expose>
 <!--<h1>{{ $refs.test.message }}</h1>-->
 </template>

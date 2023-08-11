@@ -1,5 +1,4 @@
 <script>
-import HelloWorld from './components/HelloWorld.vue'
 import TheWelcome from './components/TheWelcome.vue'
 import WelcomeItem from "@/components/WelcomeItem.vue";
 import HowToUseSlot from "@/components/HowToUseSlot.vue";
@@ -10,7 +9,6 @@ export default {
     components: {
         HowToUseBinding,
         WelcomeItem,
-        HelloWorld,
         TheWelcome,
         HowToUseSlot,
     },
@@ -22,13 +20,8 @@ export default {
 </script>
 
 <template>
-    <header>
-        <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125"/>
-
-        <div class="wrapper">
-            <HelloWorld msg="You did it!"/>
-        </div>
-    </header>
+    <router-link to="/">홈으로 가자</router-link>
+    <router-link to="/Note">노트로 가자</router-link>
 
     <main>
         <how-to-use-slot>

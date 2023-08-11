@@ -65,10 +65,10 @@ export default {
         <how-to-use-proxy/>
         <how-to-use-loop-is/>
     </WelcomeItem>
-    <Props :href.prop="a" :user-name="list"></Props>
+    <Props :user-name="list"></Props>
     <a :href.prop="a">왓더</a>
-    <a :href.attr="'www.daum.net'" :href="a">나나</a>
-    <a :href="a" :href.prop="'www.daum.net'">나나</a>
+    <a :href.attr="'//www.daum.net'" :href="a">나나</a>
+    <a :href="a" :href.prop="'//www.daum.net'">나나</a>
     <how-to-use-render-functions/>
     <div>
         <how-to-use-define-expose ref="childRef" />
