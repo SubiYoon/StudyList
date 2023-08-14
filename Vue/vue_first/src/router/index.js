@@ -1,11 +1,10 @@
-import App from "@/Main.vue";
-import Note from "@/components/Note.vue";
-import {createRouter, createWebHashHistory} from "vue-router";
 import Main from "@/Main.vue";
+import {createRouter, createWebHashHistory} from "vue-router";
 
 const routes = [
-    { path: '/', name: 'Main', component: Main},
-    { path: '/Note', name: 'Note', component : Note}
+    {path: '/', name: 'Main', component: Main},
+    {path: '/:id/:pwd', name: 'MainParam', component: Main},
+    {path: '/Note', name: 'Note', component: () => import('@/components/Note.vue')}
 ];
 
 const router = createRouter({
