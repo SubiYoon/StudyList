@@ -17,6 +17,8 @@
             <!-- 하이버네이트 사용 시 MySQL 문법을 사용 가능하도록 변경.-->
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/>
             <!-- 커넥션 Pool 설정 -->
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.format_sql" value="true"/>
             <property name="hibernate.hikari.poolName" value="pool"/>
             <property name="hibernate.hikari.maximumPoolSize" value="10"/>
             <property name="hibernate.hikari.minimumIdle" value="10"/>
