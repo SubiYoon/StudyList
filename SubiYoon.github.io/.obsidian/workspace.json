@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "FrameWork/MarkDown/HowToUse.md",
+                "file": "FrameWork/Spring/Spring Boot에 Mybatis + PostgreSQL 접목 시키기.md",
                 "mode": "source",
                 "source": false
               }
@@ -48,7 +48,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "[\"tags\"]",
+                "query": "",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -93,7 +93,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "FrameWork/MarkDown/HowToUse.md",
+                "file": "FrameWork/Spring/Spring Boot에 Mybatis + PostgreSQL 접목 시키기.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -110,7 +110,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "FrameWork/MarkDown/HowToUse.md",
+                "file": "FrameWork/Spring/Spring Boot에 Mybatis + PostgreSQL 접목 시키기.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -133,7 +133,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "FrameWork/MarkDown/HowToUse.md"
+                "file": "FrameWork/Spring/Spring Boot에 Mybatis + PostgreSQL 접목 시키기.md"
               }
             }
           },
@@ -172,23 +172,29 @@
   },
   "left-ribbon": {
     "hiddenItems": {
-      "table-editor-obsidian:Advanced Tables Toolbar": false,
       "switcher:퀵 스위처 열기": false,
       "graph:그래프 뷰 열기": false,
       "canvas:새 캔버스 만들기": false,
       "daily-notes:오늘의 데일리 노트 열기": false,
       "templates:템플릿 삽입": false,
-      "command-palette:명령어 팔레트 열기": false
+      "command-palette:명령어 팔레트 열기": false,
+      "table-editor-obsidian:Advanced Tables Toolbar": false
     }
   },
   "active": "76d1a4385b5fa572",
   "lastOpenFiles": [
-    "FrameWork/Spring/Log.md",
     "FrameWork/Spring/URL의 특정 패턴을 파악하고 가로채는 HandlerInterceptor, HandlerInterceptorAdapter.md",
+    "Language/Java/Thread&Runnable&ThreadPool.md",
+    "Language/Java/RequestContextHolder.md",
+    "Language/Java/Thread&Runnable.md",
+    "Language/Java/Spring Boot 외부경로 파일로 static 활용.md",
+    "Language/00-1 SOLID 원칙.md",
+    "Tool/Git/gitignore를 통한 application.properties 보안강화.md",
+    "FrameWork/Spring/Log.md",
     "FrameWork/Spring/Spring Boot에 Mybatis + PostgreSQL 접목 시키기.md",
+    "DataBase/What is Index?.md",
     "FrameWork/MarkDown/HowToUse.md",
     "Attached File/스크린샷 2024-01-13 오후 2.24.18.png",
-    "Language/00-1 SOLID 원칙.md",
     "Language/JavaScript/Event LooP & Task Queue(Micro Task, Macro Task).md",
     "Language/JavaScript/JavaScript’s for in & for of.md",
     "Language/JavaScript/Symbol.md",
@@ -196,7 +202,6 @@
     "FrameWork/ThymeLeaf/${@~~}을 이용한 특정 파일에 있는 메서드 실행.md",
     "FrameWork/ThymeLeaf/Spring Boot의 application.properties의 선언된 값을 가져오기!!.md",
     "Attached File/스크린샷 2024-01-02 오후 7.57.36.png",
-    "Tool/Git/gitignore를 통한 application.properties 보안강화.md",
     "Attached File/스크린샷 2024-01-02 오후 8.04.05.png",
     "Attached File/스크린샷 2024-01-02 오후 8.02.16.png",
     "Attached File/스크린샷 2024-01-02 오후 8.00.08.png",
@@ -211,11 +216,6 @@
     "Network/HTTP/12. Proxy.md",
     "Network/HTTP/11. 웹 서버.md",
     "Network/HTTP/10. Connection close ← mystry.md",
-    "Network/HTTP/09 HTTP Connection Management.md",
-    "Network/HTTP/08. TCP&IP.md",
-    "Network/HTTP/07. StartRow&StatusCode.md",
-    "Network/HTTP/06. URL EscapeString&TypeOfSchme&PURL.md",
-    "Network/HTTP/05. HTTP2.0.md",
     "Attached File/스크린샷 2023-12-24 오후 5.58.47.png",
     "Attached File/스크린샷 2023-12-24 오후 6.06.12.png",
     "Attached File/스크린샷 2023-12-24 오후 6.07.41.png",
