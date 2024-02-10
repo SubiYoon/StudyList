@@ -19,7 +19,7 @@ public class Util {
      */
     public static String[] folderSearch(String path) {
         System.out.println(HttpPieRequest.httpHeader.get("Url"));
-        String searchFoler = "/Users/dongsubyoon/Develop/StudyList/MakeWAS" + path;  //Mac Path
+        String searchFoler = "/Users/ABCD/Develop/StudyList/MakeWAS" + path;  //Mac Path
 //        String searchFoler = "C:\\Users\\Ulim\\Desktop\\Downloads" + path;  //Window Path
         File file = new File(searchFoler);
         String[] folderList = file.list();
@@ -39,7 +39,7 @@ public class Util {
     public static void makeTempFile(HttpPieRequest req) {
         int n;
         String partFileName = "";
-        File tempFile = new File("/Users/dongsubyoon/Develop/StudyList/MakeWAS/serverRoot/temp/" + HttpPieRequest.httpHeader.get("BoundaryName") + ".tmp");   //Window Path
+        File tempFile = new File("/Users/ABCD/Develop/StudyList/MakeWAS/serverRoot/temp/" + HttpPieRequest.httpHeader.get("BoundaryName") + ".tmp");   //Window Path
 //        File tempFile = new File("C:\\Users\\Ulim\\Desktop\\Downloads\\ServerRoot\\temp\\" + HttpPieRequest.httpHeader.get("BoundaryName") + ".tmp");   //Window Path
         try (
                 FileOutputStream fos = new FileOutputStream(tempFile, true);
@@ -117,7 +117,7 @@ public class Util {
                             if (!isDirect) {
                                 for (int i = 0; i < buff.length; i++) {
                                     if (bdBodyCheck == boundaryNameByte.length) {
-                                        File file = new File("/Users/dongsubyoon/Develop/StudyList/MakeWAS/serverRoot/temp/" + varName + ".tmp"); //Mac Path
+                                        File file = new File("/Users/ABCD/Develop/StudyList/MakeWAS/serverRoot/temp/" + varName + ".tmp"); //Mac Path
 //                                        File file = new File("C:\\Users\\Ulim\\Desktop\\Downloads\\ServerRoot\\temp\\" + varName + ".tmp"); //Window Path
                                         try (FileInputStream makePartFis = new FileInputStream(tempFile);
                                              FileOutputStream partFos = new FileOutputStream(file);) {
@@ -142,7 +142,7 @@ public class Util {
                             } else {
                                 for (int i = readCount; i < buff.length; i++) {
                                     if (bdBodyCheck == boundaryNameByte.length) {
-                                        File file = new File("/Users/dongsubyoon/Develop/StudyList/MakeWAS/serverRoot/temp/" + varName + ".tmp"); //Mac Path
+                                        File file = new File("/Users/ABCD/Develop/StudyList/MakeWAS/serverRoot/temp/" + varName + ".tmp"); //Mac Path
 //                                        File file = new File("C:\\Users\\Ulim\\Desktop\\Downloads\\ServerRoot\\temp\\" + varName + ".tmp"); //Window Path
                                         try (FileInputStream makePartFis = new FileInputStream(tempFile);
                                              FileOutputStream partFos = new FileOutputStream(file);) {

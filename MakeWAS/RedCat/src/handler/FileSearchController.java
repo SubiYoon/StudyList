@@ -12,7 +12,7 @@ public class FileSearchController implements HttpPieHandler {
         InputStream in = req.getInputStream();
         OutputStream out = res.getOutputStream();
 
-        String serverRoot = "/Users/dongsubyoon/Develop/StudyList/MakeWAS"; //Mac Path
+        String serverRoot = "/Users/ABCD/Develop/StudyList/MakeWAS"; //Mac Path
 //        String serverRoot = "C:\\Users\\Ulim\\Desktop\\Downloads";    //Window Path
         File file = new File(serverRoot + HttpPieRequest.httpHeader.get("Url"));
         String msg = "";

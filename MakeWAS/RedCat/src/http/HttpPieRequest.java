@@ -39,9 +39,17 @@ public class HttpPieRequest {
      */
     public boolean fileSave(String path, String varName) {
         boolean isSave = false;
-        File file = new File("/Users/dongsubyoon/Develop/StudyList/MakeWAS/serverRoot/temp/" + varName + ".tmp"); //Mac Path
+        File tempDir = new File("/Users/ABCD/Develop/StudyList/MakeWAS/serverRoot/temp/");
+        if(!tempDir.exists()){
+            tempDir.mkdirs();
+        }
+        File file = new File("/Users/ABCD/Develop/StudyList/MakeWAS/serverRoot/temp/" + varName + ".tmp"); //Mac Path
 //        File file = new File("C:\\Users\\Ulim\\Desktop\\Downloads\\ServerRoot\\temp\\" + varName + ".tmp"); //Window Path
         if(file.exists()) {
+            File resultDir = new File(path);
+            if(!resultDir.exists()){
+                resultDir.mkdirs();
+            }
             File outPut = new File(path + HttpPieRequest.file.get(varName)); //Mac Path
 //            File outPut = new File(path + HttpPieRequest.file.get(varName)); //Window Path
             try (FileInputStream fis = new FileInputStream(file);

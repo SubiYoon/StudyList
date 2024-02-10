@@ -49,10 +49,10 @@ public class FileUploadController implements HttpPieHandler{
         OutputStream out = res.getOutputStream();
 
         /* Mac Path */
-        req.fileSave("/Users/dongsubyoon/Develop/StudyList/MakeWAS/serverRoot/FileUpload/", "file1");
-        req.fileSave("/Users/dongsubyoon/Develop/StudyList/MakeWAS/serverRoot/FileUpload/", "file2");
-        req.fileSave("/Users/dongsubyoon/Develop/StudyList/MakeWAS/serverRoot/FileUpload/", "file3");
-        req.fileSave("/Users/dongsubyoon/Develop/StudyList/MakeWAS/serverRoot/FileUpload/", "file4");
+        req.fileSave("/Users/ABCD/Develop/StudyList/MakeWAS/serverRoot/FileUpload/", "file1");
+        req.fileSave("/Users/ABCD/Develop/StudyList/MakeWAS/serverRoot/FileUpload/", "file2");
+        req.fileSave("/Users/ABCD/Develop/StudyList/MakeWAS/serverRoot/FileUpload/", "file3");
+        req.fileSave("/Users/ABCD/Develop/StudyList/MakeWAS/serverRoot/FileUpload/", "file4");
         /* Window Path */
 //        req.fileSave("C:\\Users\\Ulim\\Desktop\\Downloads\\ServerRoot\\FileUpload\\", "file1");
 //        req.fileSave("C:\\Users\\Ulim\\Desktop\\Downloads\\ServerRoot\\FileUpload\\", "file2");
