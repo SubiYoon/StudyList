@@ -79,7 +79,7 @@ public class WebServer implements Runnable {
                 if (headerData.get("Content-Type").equals("application/x-www-form-urlencoded")) {
                     byte[] postParam = new byte[Integer.parseInt(headerData.get("Content-Length"))];
                     while ((n = in.read(postParam, 0, postParam.length)) != -1) {
-                        String data = new String(postParam);
+                        String data = URLDecoder.decode(new String(postParam), "UTF-8");
                         String[] postData = data.split("&");
                         for (int i = 0; i < postData.length; i++) {
                             param.put(postData[i].split("=")[0], postData[i].split("=")[1]);
