@@ -1,3 +1,5 @@
+// ignore_for_file: use_key_in_widget_constructors, prefer_const_constructors, prefer_const_literals_to_create_immutables
+
 import 'package:flutter/material.dart';
 
 class Player {
@@ -15,11 +17,30 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(
-          title: Text("Hello Flutter!!"),
-        ),
-        body: Center(
-          child: Text("Hello World!!"),
+        backgroundColor: Colors.black,
+        body: Column(
+          children: [
+            SizedBox(
+              height: 80,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Column(
+                  children: [
+                    Text(
+                      'Hey, Selena',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    Text(
+                      'Welcome Back',
+                      style: TextStyle(color: Colors.white),
+                    )
+                  ],
+                )
+              ],
+            )
+          ],
         ),
       ),
     );
