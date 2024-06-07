@@ -1,19 +1,19 @@
 <script setup>
-import TheWelcome from './components/TheWelcome.vue'
-import HowToUseSlot from '@/components/HowToUseSlot.vue'
-import HowToUseBinding from '@/components/HowToUseBinding.vue'
-import { defineProps, provide } from 'vue'
+import TheWelcome from './components/TheWelcome.vue';
+import HowToUseSlot from '@/components/HowToUseSlot.vue';
+import HowToUseBinding from '@/components/HowToUseBinding.vue';
+import { provide } from 'vue';
 
-provide('App', "Hello, I'm App!!")
-
-const props = defineProps(['id'])
-
-alert(props.id)
+provide('App', "Hello, I'm App!!");
 </script>
 
 <template>
-    <router-link to="/">홈으로 가자</router-link>
-    <router-link to="/Note">노트로 가자</router-link>
+    <div>
+        <nav>
+            <router-link to="/">홈으로 가자</router-link> | <router-link to="/Note">노트로 가자</router-link> |
+            <router-link to="/Router">라우터 공부하러 가자</router-link>
+        </nav>
+    </div>
 
     <br />
     <div>{{ $route.params }}</div>
@@ -37,31 +37,4 @@ alert(props.id)
     </main>
 </template>
 
-<style scoped>
-header {
-    line-height: 1.5;
-}
-
-.logo {
-    display: block;
-    margin: 0 auto 2rem;
-}
-
-@media (min-width: 1024px) {
-    header {
-        display: flex;
-        place-items: center;
-        padding-right: calc(var(--section-gap) / 2);
-    }
-
-    .logo {
-        margin: 0 2rem 0 0;
-    }
-
-    header .wrapper {
-        display: flex;
-        place-items: flex-start;
-        flex-wrap: wrap;
-    }
-}
-</style>
+<style scoped></style>
