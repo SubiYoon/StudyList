@@ -1,8 +1,8 @@
 <script setup>
 import TheWelcome from './components/TheWelcome.vue'
-import HowToUseSlot from "@/components/HowToUseSlot.vue";
-import HowToUseBinding from "@/components/HowToUseBinding.vue";
-import {defineProps, provide} from "vue";
+import HowToUseSlot from '@/components/HowToUseSlot.vue'
+import HowToUseBinding from '@/components/HowToUseBinding.vue'
+import { defineProps, provide } from 'vue'
 
 provide('App', "Hello, I'm App!!")
 
@@ -15,24 +15,22 @@ alert(props.id)
     <router-link to="/">홈으로 가자</router-link>
     <router-link to="/Note">노트로 가자</router-link>
 
-    <br>
+    <br />
     <div>{{ $route.params }}</div>
     <div>{{ $route.query }}</div>
     <div>{{ $route.hash }}</div>
-    <br>
+    <br />
 
     <main>
         <how-to-use-slot>
             <template v-slot:slot_start>시작이야</template>
             <template v-slot:slot_end>끝이야</template>
         </how-to-use-slot>
-        <TheWelcome/>
-        <how-to-use-slot v-slot="test">
-            {{ test.count }} {{ test.text }} {{ test.text2 }}
-        </how-to-use-slot>
-        <how-to-use-slot v-slot="{text, text2, x , y}">
+        <TheWelcome />
+        <how-to-use-slot v-slot="test"> {{ test.count }} {{ test.text }} {{ test.text2 }} </how-to-use-slot>
+        <how-to-use-slot v-slot="{ text, text2, x, y }">
             {{ text }} {{ text2 }}
-            <br>
+            <br />
             Mouse is at : {{ x }}, {{ y }}
         </how-to-use-slot>
         <how-to-use-binding></how-to-use-binding>
