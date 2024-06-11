@@ -3,15 +3,21 @@ import TheWelcome from './components/TheWelcome.vue';
 import HowToUseSlot from '@/components/HowToUseSlot.vue';
 import HowToUseBinding from '@/components/HowToUseBinding.vue';
 import { provide } from 'vue';
+import router from '@/router';
 
 provide('App', "Hello, I'm App!!");
+
+const goRouter = () => {
+    router.push({ name: 'router', params: { route: '테스트' } });
+};
 </script>
 
 <template>
     <div>
         <nav>
             <router-link to="/">홈으로 가자</router-link> | <router-link to="/Note">노트로 가자</router-link> |
-            <router-link to="/Router">라우터 공부하러 가자</router-link>
+            <router-link to="/router/라우터">라우터 공부하러 가자</router-link> |
+            <a @click="goRouter">라우터 공부하러 가자2</a>
         </nav>
     </div>
 
