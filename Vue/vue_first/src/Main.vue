@@ -2,7 +2,7 @@
 import TheWelcome from './components/TheWelcome.vue';
 import HowToUseSlot from '@/components/HowToUseSlot.vue';
 import HowToUseBinding from '@/components/HowToUseBinding.vue';
-import { provide } from 'vue';
+import { provide, reactive } from 'vue';
 import router from '@/router';
 
 provide('App', "Hello, I'm App!!");
@@ -16,7 +16,8 @@ const goRouter = () => {
     <div>
         <nav>
             <router-link to="/">홈으로 가자</router-link> | <router-link to="/Note">노트로 가자</router-link> |
-            <router-link to="/router/라우터">라우터 공부하러 가자</router-link> |
+            <router-link :to="`/router/라우트`">라우터 공부하러 가자</router-link> |
+            <router-link :to="{ name: 'router2', query: { test: '사과돌려깍기' } }">라우터 공부하러 가자 함수 모드</router-link> |
             <a @click="goRouter">라우터 공부하러 가자2</a>
         </nav>
     </div>

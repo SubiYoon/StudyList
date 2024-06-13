@@ -1,5 +1,5 @@
 import Main from '@/Main.vue';
-import { createRouter, createWebHashHistory } from 'vue-router';
+import { createRouter, createWebHashHistory, createWebHistory } from 'vue-router';
 
 const routes = [
     { path: '/', name: 'Main', component: Main },
@@ -8,13 +8,27 @@ const routes = [
     {
         path: '/router/:route',
         name: 'router',
+        props: {
+            routeObject: {
+                a: 0,
+                b: '',
+                c: true,
+            },
+            route: true,
+        },
         component: () => import('@/components/RouterStudy.vue'),
-        children: [{ path: '', name: 'routerNote', component: () => import('@/components/Note.vue') }],
+        children: [{ path: '', name: 'routerNote', component: () => import('@/components/Note.vue'), props: true }],
+    },
+    {
+        path: '/router2',
+        name: 'router2',
+        props: (route) => ({ functionData: route.query.test }),
+        component: () => import('@/components/RouterStudy.vue'),
     },
 ];
 
 const router = createRouter({
-    history: createWebHashHistory('/'),
+    history: createWebHistory(),
     routes,
 });
 
