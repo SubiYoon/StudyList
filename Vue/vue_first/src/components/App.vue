@@ -1,11 +1,12 @@
-<script setup>
-
-</script>
+<script setup></script>
 
 <template>
-    <router-view></router-view>
+    <router-link to="/">홈으로</router-link>
+    <router-view v-slot="{ Component }">
+        <transition name="fade">
+            <component :is="Component" />
+        </transition>
+    </router-view>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>
