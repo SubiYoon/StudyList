@@ -1,9 +1,21 @@
 #include "Arduino.h"
 
-void setup() { pinMode(3, OUTPUT); }
+void setup() { pinMode(5, OUTPUT); }
 void loop() {
-  for (int i = 0; i < 255; i += 10) {
-    analogWrite(3, i);
-    delay(100);
-  }
+  tone(5, 261.6);
+  delay(200);
+  noTone(5);
+  delay(200);
+  tone(5, 311.1);
+  delay(200);
+  noTone(5);
+  delay(200);
+  tone(5, 269.6);
+  delay(200);
+  noTone(5);
+  delay(200);
+  tone(5, 349.2);
+  delay(200);
+  noTone(5);
+  delay(200);
 }
