@@ -1,22 +1,8 @@
 #include "Arduino.h"
-
-int trig = 2;
-int echo = 3;
-
-void setup() {
-  Serial.begin(9600);
-  pinMode(trig, OUTPUT);
-  pinMode(echo, INPUT);
-}
-
+int analog = 0;
+void setup() { Serial.begin(9600); }
 void loop() {
-  digitalWrite(trig, HIGH);
-  delayMicroseconds(100);
-  digitalWrite(trig, LOW);
-
-  int distance = pulseIn(echo, HIGH) * 340 / 2 / 10000;
-
-  Serial.print(distance);
-  Serial.println("cm");
-  delay(100);
+  analog = analogRead(A0);
+  Serial.println(analog);
+  delay(1000);
 }
