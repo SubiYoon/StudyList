@@ -3,18 +3,19 @@ clang
 %c -std=gnu11 -fno-fat-lto-objects -mmcu=atmega328p -Os -Wall -ffunction-sections -fdata-sections -flto
 %cpp -fno-exceptions -fno-threadsafe-statics -fpermissive -std=gnu++11 -mmcu=atmega328p -Os -Wall -ffunction-sections -fdata-sections -flto
 
--I$HOME/Develop/Study/StudyList/Arduino/include
--I$HOME/Develop/Study/StudyList/Arduino/src
--I$HOME/.platformio/packages/framework-arduino-avr/cores/arduino
--I$HOME/.platformio/packages/framework-arduino-avr/variants/standard
--I$HOME/.platformio/packages/framework-arduino-avr/libraries/EEPROM/src
--I$HOME/.platformio/packages/framework-arduino-avr/libraries/HID/src
--I$HOME/.platformio/packages/framework-arduino-avr/libraries/SPI/src
--I$HOME/.platformio/packages/framework-arduino-avr/libraries/SoftwareSerial/src
--I$HOME/.platformio/packages/framework-arduino-avr/libraries/Wire/src
--I$HOME/.platformio/packages/toolchain-atmelavr/lib/gcc/avr/7.3.0/include
--I$HOME/.platformio/packages/toolchain-atmelavr/lib/gcc/avr/7.3.0/include-fixed
--I$HOME/.platformio/packages/toolchain-atmelavr/avr/include
+-I/Users/ABCD/Develop/Study/StudyList/Arduino/include
+-I/Users/ABCD/Develop/Study/StudyList/Arduino/src
+-I/Users/ABCD/Develop/Study/StudyList/Arduino/.pio/libdeps/uno/LiquidCrystal
+-I/Users/ABCD/.platformio/packages/framework-arduino-avr/libraries/Wire/src
+-I/Users/ABCD/.platformio/packages/framework-arduino-avr/cores/arduino
+-I/Users/ABCD/.platformio/packages/framework-arduino-avr/variants/standard
+-I/Users/ABCD/.platformio/packages/framework-arduino-avr/libraries/EEPROM/src
+-I/Users/ABCD/.platformio/packages/framework-arduino-avr/libraries/HID/src
+-I/Users/ABCD/.platformio/packages/framework-arduino-avr/libraries/SPI/src
+-I/Users/ABCD/.platformio/packages/framework-arduino-avr/libraries/SoftwareSerial/src
+-I/Users/ABCD/.platformio/packages/toolchain-atmelavr/lib/gcc/avr/7.3.0/include
+-I/Users/ABCD/.platformio/packages/toolchain-atmelavr/lib/gcc/avr/7.3.0/include-fixed
+-I/Users/ABCD/.platformio/packages/toolchain-atmelavr/avr/include
 
 -DPLATFORMIO=60116
 -DARDUINO_AVR_UNO

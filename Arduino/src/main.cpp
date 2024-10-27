@@ -1,21 +1,11 @@
 #include "Arduino.h"
+#include "LiquidCrystal.h"
+#include "Wire.h"
 
-void setup() { pinMode(5, OUTPUT); }
-void loop() {
-  tone(5, 261.6);
-  delay(200);
-  noTone(5);
-  delay(200);
-  tone(5, 311.1);
-  delay(200);
-  noTone(5);
-  delay(200);
-  tone(5, 269.6);
-  delay(200);
-  noTone(5);
-  delay(200);
-  tone(5, 349.2);
-  delay(200);
-  noTone(5);
-  delay(200);
+LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
+
+void setup() {
+  lcd.begin(16, 2);
+  lcd.print("I'm stil hungry...");
 }
+void loop() {}
