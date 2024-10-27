@@ -1,23 +1,22 @@
 #include "Arduino.h"
 
-int val = 0;
+int trig = 2;
+int echo = 3;
 
 void setup() {
-  // 프로그램 시작시 최초 1번 실행
-  pinMode(2, INPUT);
-  pinMode(3, OUTPUT);
   Serial.begin(9600);
+  pinMode(trig, OUTPUT);
+  pinMode(echo, INPUT);
 }
 
 void loop() {
-  // 프로그램 후 반복적으로 실행
-  val = digitalRead(2);
+  digitalWrite(trig, HIGH);
+  delayMicroseconds(100);
+  digitalWrite(trig, LOW);
 
-  if (val == HIGH) {
-    digitalWrite(3, HIGH);
-  } else {
-    digitalWrite(3, LOW);
-  }
+  int distance = pulseIn(echo, HIGH) * 340 / 2 / 10000;
 
-  Serial.println(val);
+  Serial.print(distance);
+  Serial.println("cm");
+  delay(100);
 }
