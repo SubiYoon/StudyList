@@ -6,9 +6,9 @@ clang
 -I/Users/ABCD/Develop/Study/StudyList/Arduino/include
 -I/Users/ABCD/Develop/Study/StudyList/Arduino/src
 -I/Users/ABCD/Develop/Study/StudyList/Arduino/.pio/libdeps/uno/LiquidCrystal
--I/Users/ABCD/.platformio/packages/framework-arduino-avr/libraries/Wire/src
 -I/Users/ABCD/.platformio/packages/framework-arduino-avr/cores/arduino
 -I/Users/ABCD/.platformio/packages/framework-arduino-avr/variants/standard
+-I/Users/ABCD/.platformio/packages/framework-arduino-avr/libraries/Wire/src
 -I/Users/ABCD/.platformio/packages/framework-arduino-avr/libraries/EEPROM/src
 -I/Users/ABCD/.platformio/packages/framework-arduino-avr/libraries/HID/src
 -I/Users/ABCD/.platformio/packages/framework-arduino-avr/libraries/SPI/src
