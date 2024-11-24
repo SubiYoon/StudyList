@@ -1,3 +1,5 @@
+#include "common.h"
+#include "fucn.h" // Java의 interface같은 역할??
 #include <stdio.h>
 
 // NOTE: 구조체 : 사용자 정의 자료형(Java의 Class같은 느낌??)
@@ -44,13 +46,21 @@ int main(int argc, char *argv[]) {
   //  변수의 종류
   // 1. 지역변수
   // 2. 전역변수
-  // 3. 정적변수
-  // 4. 외부변수
+  // 3. 정적변수(static 키워드)
+  // 4. 외부변수(extern 키워드, 어딘가 반드시 초기화가 되어야함)
 
   // 메모리의 종류
   // 스택 영역 : 지역
   // 데이터 영역(프로그램 시작 시 생성, 종료시 삭제) : 정적, 외부
   // 읽기 전용(코드, Read Olny Memory)
   // 힙 영역
+
+  // 분할구현 (Java의 Interface와 비슷한 기능??)
+  int example01 = add(3, 4);
+  printf("테스트 : %d", example01);
+
+  iExtern = 500;
+
+  int example02 = add(3, 4);
   return 0;
 }

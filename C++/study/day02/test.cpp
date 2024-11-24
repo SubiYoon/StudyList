@@ -1,0 +1,1 @@
+int iExtern = 0;
