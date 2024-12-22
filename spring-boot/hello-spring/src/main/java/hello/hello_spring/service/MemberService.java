@@ -3,12 +3,14 @@ package hello.hello_spring.service;
 import java.util.List;
 import java.util.Optional;
 
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import hello.hello_spring.domain.Member;
 import hello.hello_spring.repository.MemberRepository;
 
+@Transactional
 public class MemberService {
     private final MemberRepository memberRepository;
 
@@ -18,7 +20,7 @@ public class MemberService {
 
     /**
      * 회원가입
-     * 
+     *
      * @param member
      * @return
      */
@@ -33,7 +35,7 @@ public class MemberService {
 
     /**
      * 중복회원 검사
-     * 
+     *
      * @param member
      * @throws throw new IllegalStateException("이미 존재하는 회원입니다.");
      */
@@ -45,7 +47,7 @@ public class MemberService {
 
     /**
      * 전체회원 조회
-     * 
+     *
      * @return
      */
     public List<Member> findMembers() {
@@ -54,7 +56,7 @@ public class MemberService {
 
     /**
      * 특정 회원 조회
-     * 
+     *
      * @param id
      * @return
      */
