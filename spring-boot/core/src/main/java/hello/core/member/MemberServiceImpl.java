@@ -1,6 +1,6 @@
 package hello.core.member;
 
-public class MemberServiceImpl implements MemberService{
+public class MemberServiceImpl implements MemberService {
     private MemberRepository memberRepository;
 
     public MemberServiceImpl(MemberRepository memberRepository) {
@@ -16,4 +16,10 @@ public class MemberServiceImpl implements MemberService{
     public Member findMemberById(Long memberId) {
         return memberRepository.findById(memberId);
     }
+
+    //테스트 용도
+    public MemberRepository getMemberRepository() {
+        return memberRepository;
+    }
+
 }
