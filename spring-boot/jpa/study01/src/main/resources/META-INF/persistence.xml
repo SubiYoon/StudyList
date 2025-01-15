@@ -4,6 +4,8 @@
              version="2.0">
     <persistence-unit name="study01"> <!-- NOTE: persistent manager에서 어떤 녀석을 선택할지 결정하기위한 name -->
         <class>io.jpastudy.study01.jpa.entity.Customer</class>
+        <class>io.jpastudy.study01.jpa.entity.Student</class>
+        <class>io.jpastudy.study01.jpa.entity.Major</class>
 
         <properties>
 
