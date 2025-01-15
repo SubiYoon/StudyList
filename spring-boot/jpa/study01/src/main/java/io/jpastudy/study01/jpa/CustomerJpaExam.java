@@ -16,13 +16,13 @@ public class CustomerJpaExam {
 
         //
         try {
-            Customer customer = new Customer("ID0004", "Lee"); // 비영속 상태
+            Customer customer = new Customer("ID0005", "Jin"); // 비영속 상태
             em.persist(customer); // 영속 상태
+            em.detach(customer); // 준영속 상태
 
-            // em.flush();
-            Query query = em.createQuery("select c from Customer c", Customer.class);
-            List<Customer> resultList = query.getResultList();
-            System.out.println(resultList);
+            // 쿼리를 날려 DB에서 가져온다.
+            Customer foundCustomer = em.find(Customer.class, "ID0005");
+            System.out.println(foundCustomer.toString());
 
             tx.commit();
         } catch (Exception e) {
