@@ -12,6 +12,7 @@
             <property name="javax.persistence.jdbc.password" value="admin1!"/>
             <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/JWT"/>
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/> <!-- NOTE: 어떤 DB인지 지칭해주는 것 -->
+            <property name="hibernate.hbm2ddl.auto" value="create"/>
 
             <property name="hibernate.show_sql" value="true"/>
             <property name="hibernate.format_sql" value="true"/>
