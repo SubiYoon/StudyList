@@ -24,6 +24,15 @@ public class CustomerJpaExam {
 //            Customer foundCustomer = em.find(Customer.class, "ID0005");
 //            System.out.println(foundCustomer.toString());
 
+
+
+            Customer customer = new Customer();
+            customer.setName("Kim");
+            customer.setRegisterDate(System.currentTimeMillis());
+            em.persist(customer);
+
+            System.out.println("============ Before Commit ============");
+
             tx.commit();
         } catch (Exception e) {
             tx.rollback();
