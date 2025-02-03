@@ -46,7 +46,7 @@ public class InternalCallV1Test {
         public void external() {
             log.info("call external");
             printTxInfo();
-            this.internal();
+            this.internal(); // Proxy에 있는 트랜젝션 코드를 거치지 않아 active가 false로 나온다.
         }
 
         @Transactional
