@@ -25,7 +25,6 @@ public class LogRepository {
             log.info("log 저장시 예외 발생");
             throw new RuntimeException("예외 발생");
         }
-
     }
 
     public Optional<Log> find(String message) {
@@ -33,6 +32,4 @@ public class LogRepository {
                 .setParameter("message", message)
                 .getResultList().stream().findAny();
     }
-
-
 }
