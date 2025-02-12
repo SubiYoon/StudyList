@@ -33,19 +33,19 @@ public class Item {
         this.name = name;
     }
 
-    public Long getPrice() {
+    public int getPrice() {
         return price;
     }
 
-    public void setPrice(Long price) {
+    public void setPrice(int price) {
         this.price = price;
     }
 
-    public Long getStockquantity() {
+    public int getStockquantity() {
         return stockquantity;
     }
 
-    public void setStockquantity(Long stockquantity) {
+    public void setStockquantity(int stockquantity) {
         this.stockquantity = stockquantity;
     }
 }
