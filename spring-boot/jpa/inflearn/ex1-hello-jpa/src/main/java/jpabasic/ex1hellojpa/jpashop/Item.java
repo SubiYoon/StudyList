@@ -1,9 +1,8 @@
 package jpabasic.ex1hellojpa.jpashop;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "ITEM")
@@ -14,6 +13,9 @@ public class Item {
     private String name;
     private int price;
     private int stockquantity;
+
+    @ManyToMany(mappedBy = "items")
+    private List<Category> categories = new ArrayList<>();
 
     public Item() { }
 
