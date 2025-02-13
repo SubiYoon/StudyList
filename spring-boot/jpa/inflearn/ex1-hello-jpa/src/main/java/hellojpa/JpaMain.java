@@ -8,6 +8,7 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 import java.lang.module.FindException;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class JpaMain {
     public static void main(String[] args) {
@@ -18,25 +19,33 @@ public class JpaMain {
         tx.begin();
 
         try {
+            Team teamA = new Team();
+            teamA.setName("Team A");
+            em.persist(teamA);
+
+            Team teamB = new Team();
+            teamB.setName("Team B");
+            em.persist(teamB);
+            
             Member member1 = new Member();
             member1.setUsername("user1");
             member1.setCreateBy("Kim");
             member1.setCreateDate(LocalDateTime.now());
-
+            member1.setTeam(teamA);
             em.persist(member1);
 
             Member member2 = new Member();
             member2.setUsername("user2");
             member2.setCreateBy("Yoon");
             member2.setCreateDate(LocalDateTime.now());
-
+            member2.setTeam(teamB);
             em.persist(member2);
-
+            
             em.flush();
             em.clear();
 
-            Member refMember = em.getReference(Member.class, member1.getId());
-            Hibernate.initialize(refMember); // Hibernate를 이용한 강제 초기화
+//            Member m = em.find(Member.class, member1.getId());
+            List<Member> members = em.createQuery("select m from Member m join fetch m.team", Member.class).getResultList();
 
             tx.commit();
         } catch (Exception e) {
