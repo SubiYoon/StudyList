@@ -2,6 +2,8 @@ package jpabasic.ex1hellojpa.jpashop;
 
 import javax.persistence.*;
 
+import static javax.persistence.FetchType.*;
+
 //@Entity
 @Table(name = "ORDER_ITEM")
 public class OrderItem extends BaseEntity {
@@ -9,11 +11,11 @@ public class OrderItem extends BaseEntity {
     @GeneratedValue
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "ORDERS_ID")
     private Order order;
 
-    @ManyToOne
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "ITEM_ID")
     private Item item;
 

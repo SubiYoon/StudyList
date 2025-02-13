@@ -2,6 +2,8 @@ package jpabasic.ex1hellojpa.jpashop;
 
 import javax.persistence.*;
 
+import static javax.persistence.FetchType.*;
+
 //@Entity
 public class Delivery extends BaseEntity{
 
@@ -16,7 +18,7 @@ public class Delivery extends BaseEntity{
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
-    @OneToOne(mappedBy = "delivery")
+    @OneToOne(fetch = LAZY, mappedBy = "delivery")
     private Order order;
 
     public Delivery (){}
