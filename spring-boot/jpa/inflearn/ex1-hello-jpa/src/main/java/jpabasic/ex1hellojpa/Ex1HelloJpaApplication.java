@@ -1,7 +1,6 @@
 package jpabasic.ex1hellojpa;
 
-import jpabasic.ex1hellojpa.jpashop.Order;
-import jpabasic.ex1hellojpa.jpashop.OrderItem;
+import jpabasic.ex1hellojpa.jpashop.Book;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -23,8 +22,12 @@ public class Ex1HelloJpaApplication {
 
         try {
 
-            Order order = new Order();
-            order.addOrderItem(new OrderItem());
+            Book book = new Book();
+            book.setName("JPA");
+            book.setAuthor("Yoon");
+
+            em.persist(book);
+
 
             tx.commit();
         } catch (Exception e) {
