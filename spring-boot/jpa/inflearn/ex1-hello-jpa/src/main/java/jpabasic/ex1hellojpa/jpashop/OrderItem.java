@@ -2,7 +2,7 @@ package jpabasic.ex1hellojpa.jpashop;
 
 import javax.persistence.*;
 
-@Entity
+//@Entity
 @Table(name = "ORDER_ITEM")
 public class OrderItem {
     @Id

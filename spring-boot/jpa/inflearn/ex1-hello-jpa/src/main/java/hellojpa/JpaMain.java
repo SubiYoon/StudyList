@@ -15,29 +15,18 @@ public class JpaMain {
         tx.begin();
 
         try {
-            Team team = new Team();
-            team.setName("TeamA");
-            em.persist(team);
+            Movie movie = new Movie();
+            movie.setDirector("AAA");
+            movie.setActor("BBB");
+            movie.setName("바람과함께 사라지다.");
+            movie.setPrice(10000);
 
-            Member member  = new Member();
-            member.setUsername("member1");
+            em.persist(movie);
 
-            member.setTeam(team);
-            team.addMember(member);
-//            team.getMembers().add(member);
-            em.persist(member);
+            em.flush();
+            em.clear();
 
-            // flush하고 clear해서 사용하지 않을거라면 양쪽 참조하는 데이터 모두 값을 셋팅해주어야 한다.
-            // Member에 Team도 셋팅하고 Team에 List<Member>에도 member를 추가해 주어야 한다.
-//            em.flush();
-//            em.clear();
-
-            Team findTeam = em.find(Team.class, team.getId());
-            List<Member> members = findTeam.getMembers();
-
-            for (Member m : members) {
-                System.out.println("m.getUsername() = " + m.getUsername());
-            }
+            Movie findMovie = em.find(Movie.class, movie.getId());
 
             tx.commit();
         } catch (Exception e) {
