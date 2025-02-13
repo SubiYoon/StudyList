@@ -2,7 +2,7 @@ package hellojpa;
 
 import javax.persistence.*;
 
-//@Entity
+@Entity
 //@Inheritance(strategy = InheritanceType.JOINED) // ITEM, MOVIE, BOOK, ALBUM 테이블이 생성됨
 //@Inheritance(strategy = InheritanceType.SINGLE_TABLE) // ITEM 테이블하나에 모든 정보 때려넣음
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS) // MOVIE, BOOk, ALBUM 테이블이 생성

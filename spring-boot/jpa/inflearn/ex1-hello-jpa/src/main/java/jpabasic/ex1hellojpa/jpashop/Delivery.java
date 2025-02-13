@@ -2,7 +2,7 @@ package jpabasic.ex1hellojpa.jpashop;
 
 import javax.persistence.*;
 
-@Entity
+//@Entity
 public class Delivery extends BaseEntity{
 
     @Id
