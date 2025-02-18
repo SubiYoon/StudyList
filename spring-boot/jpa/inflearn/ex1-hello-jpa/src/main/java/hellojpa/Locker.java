@@ -14,9 +14,6 @@ public class Locker {
 
     private String name;
 
-    @OneToOne(mappedBy = "locker")
-    private Member member;
-
     public Locker() {}
 
     public Long getId() {
@@ -33,13 +30,5 @@ public class Locker {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Member getMember() {
-        return member;
-    }
-
-    public void setMember(Member member) {
-        this.member = member;
     }
 }

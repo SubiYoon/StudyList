@@ -1,5 +1,6 @@
 package hellojpa;
 
+import net.bytebuddy.matcher.DefinedShapeMatcher;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
@@ -16,22 +17,41 @@ public class JpaMain {
         tx.begin();
 
         try {
-            Child child1 = new Child();
-            Child child2 = new Child();
 
-            Parent parent = new Parent();
-            parent.addChild(child1);
-            parent.addChild(child2);
+            Member member = new Member();
+            member.setUsername("member1");
+            member.setHomeAddress(new Address("homeCity", "street", "1000"));
 
-            em.persist(parent);
+            //
+            member.getFavoriteFoods().add("치킨");
+            member.getFavoriteFoods().add("족발");
+            member.getFavoriteFoods().add("보쌈");
+
+            member.getAddressHistory().add(new Address("old1", "street", "10"));
+            member.getAddressHistory().add(new Address("old2", "street", "100"));
+
+            em.persist(member);
 
             em.flush();
             em.clear();
 
-            Parent findParent = em.find(Parent.class, parent.getId());
-            findParent.getChildren().remove(0);
+            // homeCity -> newCity
+            Member findMember = em.find(Member.class, member.getId());
+            Address oldAddress = findMember.getHomeAddress();
+            findMember.setHomeAddress(new Address("newCity", oldAddress.getStreet(), oldAddress.getZipcode()));
 
-//            em.remove(findParent);
+            // 치킨 -> 한식
+            findMember.getFavoriteFoods().remove("치킨");
+            findMember.getFavoriteFoods().add("한식");
+
+            //
+            findMember.getAddressHistory().remove(new Address("old1", "street", "10"));
+            findMember.getAddressHistory().add(new Address("newCity1", "street", "10000"));
+
+            em.flush();
+            em.clear();
+
+           Member findMember2 = em.find(Member.class, member.getId());
 
             tx.commit();
         } catch (Exception e) {
