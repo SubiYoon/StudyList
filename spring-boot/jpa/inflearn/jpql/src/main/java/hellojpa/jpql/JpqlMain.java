@@ -30,6 +30,7 @@ public class JpqlMain {
             Member member1 = new Member();
             member1.setUsername("회원1");
             member1.setTeam(team1);
+            member1.setAge(100);
             em.persist(member1);
 
             Member member2 = new Member();
@@ -50,13 +51,18 @@ public class JpqlMain {
             em.flush();
             em.clear();
 
-            List<Member> results = em.createNamedQuery("Member.findByUsername", Member.class)
-                    .setParameter("username", member1.getUsername())
-                    .getResultList();
+            int resultCount = em.createQuery("update Member m set m.age = 20").executeUpdate();
 
-            for (Member member : results) {
-                System.out.println(member);
-            }
+            System.out.println("resultCount = " + resultCount);
+
+            System.out.println("member1.getAge() = " + member1.getAge()); // 영속성 컨텍스트에 반영이 되지않아 100살로 나옴
+
+            em.clear(); // 또는 em.detach(member1) 영속성 컨텍스트를 초기화
+
+            System.out.println("=============================");
+
+            Member member = em.find(Member.class, member1.getId());
+            System.out.println("after clear = " + member.getAge());
 
             tx.commit();
         } catch (Exception e) {
