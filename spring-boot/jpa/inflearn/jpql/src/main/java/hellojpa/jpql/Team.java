@@ -1,5 +1,7 @@
 package hellojpa.jpql;
 
+import org.hibernate.annotations.BatchSize;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -14,6 +16,7 @@ public class Team {
     private Long id;
     private String name;
 
+    @BatchSize(size = 100) // 한번에 쿼리를 날릴때 최대 몇개씩 가져올건지, 또는 persistence.xml에 default를 작성해도됨
     @OneToMany(mappedBy = "team")
     private List<Member> members = new ArrayList<Member>();
 

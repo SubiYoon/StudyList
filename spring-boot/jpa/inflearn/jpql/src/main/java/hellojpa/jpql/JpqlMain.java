@@ -58,8 +58,11 @@ public class JpqlMain {
             // distinct를 사용하면 결과 3개, 사용안하면 결과가 4개 - SQL쿼리의 distinct랑 같다고 생각하면 안됨
             // Team에 대한 중복값을 DB에서가 아닌 애플리케이션에서 JPA가 중복값을 제거해줌
             // 1 : N 조인시 Data가 뻥튀기 되는 현상이 있기 때문
-            String query2 = "select t from Team t join fetch t.members";
-            List<Team> result2 = em.createQuery(query2, Team.class).getResultList();
+            String query2 = "select t from Team t";
+            List<Team> result2 = em.createQuery(query2, Team.class)
+                    .setFirstResult(0)
+                    .setMaxResults(2)
+                    .getResultList();
 
             for (Team team : result2) {
                 System.out.println(team);
