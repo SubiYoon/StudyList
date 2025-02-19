@@ -50,9 +50,8 @@ public class JpqlMain {
             em.flush();
             em.clear();
 
-            String query = "select m from Member m where m.team = :team";
-            List<Member> results = em.createQuery(query, Member.class)
-                    .setParameter("team", team1)
+            List<Member> results = em.createNamedQuery("Member.findByUsername", Member.class)
+                    .setParameter("username", member1.getUsername())
                     .getResultList();
 
             for (Member member : results) {
