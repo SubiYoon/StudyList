@@ -44,7 +44,7 @@ class OrderServiceTest {
         // then
         Order order = orderRepository.findOne(orderId);
 
-        assertEquals(OrderStatus.ORDER, order.getOrderStatus(), "상품 주문시 상태는 ORDER");
+        assertEquals(OrderStatus.ORDER, order.getStatus(), "상품 주문시 상태는 ORDER");
         assertEquals(1, order.getOrderItems().size(), "주문한 상품 종류가 정확해야한다.");
         assertEquals(20000, order.getTotalPrice(), "주문 가격은 가격 * 수량 이어야 한다.");
         assertEquals(8, book.getStockQuantity(), "상품을 주문하면 재고는 감소해야한다.");
@@ -82,7 +82,7 @@ class OrderServiceTest {
         // then
         Order findOrder = orderRepository.findOne(order);
 
-        assertEquals(OrderStatus.CANCEL, findOrder.getOrderStatus(), "주문 취소하면 상태가 CANCLE로 변경되어야 한다.");
+        assertEquals(OrderStatus.CANCEL, findOrder.getStatus(), "주문 취소하면 상태가 CANCLE로 변경되어야 한다.");
         assertEquals(10, book.getStockQuantity(), "주문 취소하면 상태가 CANCLE로 변경되어야 한다.");
     }
 
