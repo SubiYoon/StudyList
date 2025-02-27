@@ -2,7 +2,6 @@ package jpabook.jpashop.api;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
-import jpabook.jpashop.controller.MemberForm;
 import jpabook.jpashop.domain.Address;
 import jpabook.jpashop.domain.Member;
 import jpabook.jpashop.service.MemberService;
