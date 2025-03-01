@@ -22,6 +22,9 @@ class MemberTest {
 
     @PersistenceContext
     EntityManager em;
+    
+    @Autowired
+    MemberRepository memberRepository;
 
     @Test
     void testEntity() throws Exception {
@@ -52,4 +55,25 @@ class MemberTest {
         // then
     }
 
+    @Test
+    void jpaEventBaseEntity() throws Exception {
+        // given
+        Member member = new Member("member1");
+        memberRepository.save(member);
+
+        Thread.sleep(100);
+        member.setUsername("member2");
+        
+        em.flush();
+        em.clear();
+        
+        // when
+        Member findMember = memberRepository.findById(member.getId()).get();
+
+        // then
+        System.out.println("findMember.getCreateDate() = " + findMember.getCreateDate());
+        System.out.println("findMember.getUpdateDate() = " + findMember.getLastModifiedDate());
+        System.out.println("findMember.getCreatedBy() = " + findMember.getCreatedBy());
+        System.out.println("findMember.getLastModifiedBy() = " + findMember.getLastModifiedBy());
+    }
 }
