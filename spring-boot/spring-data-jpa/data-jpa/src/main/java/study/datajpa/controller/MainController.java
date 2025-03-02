@@ -36,8 +36,8 @@ public class MainController {
 
     @PostConstruct
     public void init() {
-        for (int i = 0; i < 100; i++) {
-            memberRepository.save(new Member("member" + i, i));
-        }
+//        for (int i = 0; i < 100; i++) {
+//            memberRepository.save(new Member("member" + i, i));
+//        }
     }
 }
