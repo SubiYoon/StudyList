@@ -1,9 +1,12 @@
 package study.querydsl;
 
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.core.types.dsl.DateTimeTemplate;
 import com.querydsl.core.types.dsl.Expressions;
@@ -711,5 +714,83 @@ public class QuerydslBasic {
         for (MemberDto memberDto : result) {
             System.out.println("memberDto = " + memberDto);
         }
+    }
+
+    /**
+     * BooleanBuilder를 사용하는 방법
+     */
+    @Test
+    public void dynamicQuery_BooleanBuilder() throws Exception {
+        // given
+        String usernameParam = null;/*"member1";*/
+        Integer ageParam = 10;
+
+        // when
+        List<Member> result = searchMember1(usernameParam, ageParam);
+
+        // then
+        System.out.println("result = " + result);
+        assertThat(result.size()).isEqualTo(1);
+    }
+
+    private List<Member> searchMember1(String usernameCond, Integer ageCond) {
+        BooleanBuilder builder;
+        try {
+            builder = new BooleanBuilder(member.username.eq(usernameCond)); //초기 필수값을 셋팅할 경우
+        } catch (Exception e) {
+            System.out.println("username은 필수값인데 없이 날라왔다. 그냥 진행하자.");
+            builder = new BooleanBuilder();
+        }
+
+        if (usernameCond != null) {
+            builder.and(member.username.eq(usernameCond));
+        }
+        if (ageCond != null) {
+            builder.and(member.age.eq(ageCond));
+        }
+
+        return queryFactory
+                .selectFrom(member)
+                .where(builder)
+                .fetch();
+    }
+
+    @Test
+    public void dynamicQuery_whereParam() throws Exception {
+        // given
+        String usernameParam = "member1";
+        Integer ageParam = 10;
+
+        // when
+        List<Member> result = searchMember2(usernameParam, ageParam);
+
+        // then
+        assertThat(result.size()).isEqualTo(1);
+    }
+
+    private List<Member> searchMember2(String usernameCond, Integer ageCond) {
+        return queryFactory
+                .selectFrom(member)
+                .where(
+                        usernameEq(usernameCond),
+                        ageEq(ageCond)
+                )
+                .fetch();
+    }
+
+    private BooleanExpression usernameEq(String usernameCond) {
+        return usernameCond != null ? member.username.eq(usernameCond) : null;
+    }
+
+    private BooleanExpression ageEq(Integer ageCond) {
+        return ageCond != null ? member.age.eq(ageCond) : null;
+    }
+
+    /**
+     * 위 두조건을 합쳐서 사용할 수도 있음.
+     * 단, BooleanExpresstion을 사용해야함
+     */
+    private BooleanExpression allEq(String usernameCond, Integer ageCond) {
+        return usernameEq(usernameCond).and(ageEq(ageCond));
     }
 }
