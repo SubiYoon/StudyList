@@ -834,4 +834,45 @@ public class QuerydslBasic {
 
         // then
     }
+
+    /**
+     * SQL function 호출
+     */
+    @Test
+    public void callFunction() throws Exception {
+        // given
+
+        // when
+        List<String> result = queryFactory
+                .select(
+                        Expressions.stringTemplate(
+                                "function('replace', {0}, {1}, {2})",
+                                member.username, "member", "M"))
+                .from(member)
+                .fetch();
+        // then
+        for (String s : result) {
+            System.out.println("s = " + s);
+        }
+    }
+
+    @Test
+    public void callFunction2() throws Exception {
+        // given
+
+        // when
+        List<String> result = queryFactory
+                .select(member.username.upper())
+                .from(member)
+                .where(member.username.eq(
+//                        Expressions.stringTemplate("function('upper', {0})", member.username)
+                        member.username.lower()
+                 ))
+                .fetch();
+
+        // then
+        for (String s : result) {
+            System.out.println("s = " + s);
+        }
+    }
 }
