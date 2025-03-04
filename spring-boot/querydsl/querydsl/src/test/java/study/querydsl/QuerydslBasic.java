@@ -2,6 +2,7 @@ package study.querydsl;
 
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.Tuple;
+import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -20,6 +21,7 @@ import study.querydsl.entity.QMember;
 import study.querydsl.entity.QTeam;
 import study.querydsl.entity.Team;
 
+import javax.lang.model.SourceVersion;
 import java.util.List;
 
 import static com.querydsl.jpa.JPAExpressions.*;
@@ -464,5 +466,43 @@ public class QuerydslBasic {
             System.out.println("tuple = " + tuple);
         }
 
+    }
+
+    @Test
+    public void basicCase() throws Exception {
+        // given
+
+        // when
+        List<String> result = queryFactory
+                .select(member.age
+                        .when(10).then("10살")
+                        .when(20).then("20살")
+                        .otherwise("기타"))
+                .from(member)
+                .fetch();
+
+        // then
+        for (String s : result) {
+            System.out.println("Case = " + s);
+        }
+    }
+
+    @Test
+    public void complexCase() throws Exception {
+        // given
+
+        // when
+        List<String> result = queryFactory
+                .select(new CaseBuilder()
+                        .when(member.age.between(0, 20)).then("0~20살")
+                        .when(member.age.between(21, 30)).then("21살~30살")
+                        .otherwise("기타"))
+                .from(member)
+                .fetch();
+
+        // then
+        for (String s : result) {
+            System.out.println("s = " + s);
+        }
     }
 }
