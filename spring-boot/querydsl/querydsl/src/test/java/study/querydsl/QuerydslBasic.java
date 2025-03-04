@@ -3,41 +3,34 @@ package study.querydsl;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.Tuple;
-import com.querydsl.core.types.ExpressionUtils;
-import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.CaseBuilder;
-import com.querydsl.core.types.dsl.DateTimeTemplate;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPAExpressions;
-import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.PersistenceUnit;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
 import study.querydsl.dto.MemberDto;
 import study.querydsl.dto.QMemberDto;
 import study.querydsl.dto.UserDto;
 import study.querydsl.entity.Member;
 import study.querydsl.entity.QMember;
-import study.querydsl.entity.QTeam;
 import study.querydsl.entity.Team;
 
-import javax.lang.model.SourceVersion;
 import java.util.List;
 
-import static com.querydsl.jpa.JPAExpressions.*;
-import static org.assertj.core.api.Assertions.*;
-import static study.querydsl.entity.QMember.*;
-import static study.querydsl.entity.QTeam.*;
+import static com.querydsl.jpa.JPAExpressions.select;
+import static org.assertj.core.api.Assertions.assertThat;
+import static study.querydsl.entity.QMember.member;
+import static study.querydsl.entity.QTeam.team;
 
 @SpringBootTest
 @Transactional
@@ -792,5 +785,53 @@ public class QuerydslBasic {
      */
     private BooleanExpression allEq(String usernameCond, Integer ageCond) {
         return usernameEq(usernameCond).and(ageEq(ageCond));
+    }
+
+    /**
+     * 영속성 컨텍스의 데이터는 변경되지 않기 때문에 주의해서 사용해야함.
+     * 따라서, clear()를 시켜주던가 해당 영속성 컨텍스트만 detach()시켜주던가 해야한다.
+     */
+    @Test
+    public void bulkupdate() throws Exception {
+        // given
+
+        // when
+        long count = queryFactory
+                .update(member)
+                .set(member.username, "비회원")
+                .where(member.age.lt(28))
+                .execute();
+
+        // then
+        assertThat(count).isEqualTo(2);
+    }
+
+    @Test
+    public void bulkAdd() throws Exception {
+        // given
+
+        // when
+        queryFactory
+                .update(member)
+                .set(member.age, member.age.add(1)) // 더하기
+//                .set(member.age, member.age.add(-1)) // 빼기
+//                .set(member.age, member.age.multiply(2)) // 빼기
+//                .set(member.age, member.age.divide(2)) // 빼기
+                .execute();
+
+        // then
+    }
+
+    @Test
+    public void bulkDelete() throws Exception {
+        // given
+
+        // when
+        queryFactory
+                .delete(member)
+                .where(member.age.gt(18))
+                .execute();
+
+        // then
     }
 }
