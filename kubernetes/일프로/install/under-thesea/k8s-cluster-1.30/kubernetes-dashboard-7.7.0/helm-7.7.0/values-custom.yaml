@@ -1,0 +1,31 @@
+metrics-server:
+  enabled: true
+
+  nodeSelector:
+    kubernetes.io/hostname: k8s-master
+  tolerations:
+    - key: "node-role.kubernetes.io/control-plane"
+      operator: "Exists"
+      effect: "NoSchedule"
+
+kong:
+  proxy:
+    type: NodePort
+    tls:
+      nodePort: 30000
+
+  nodeSelector:
+    kubernetes.io/hostname: k8s-master
+  tolerations:
+    - key: "node-role.kubernetes.io/control-plane"
+      operator: "Exists"
+      effect: "NoSchedule"
+
+app:
+  scheduling:
+    nodeSelector:
+      kubernetes.io/hostname: k8s-master
+  tolerations:
+    - key: "node-role.kubernetes.io/control-plane"
+      operator: "Exists"
+      effect: "NoSchedule"
