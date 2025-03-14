@@ -34,11 +34,12 @@ pipeline {
 
     stages {
         stage('소스파일 체크아웃') {
-            checkout scmGit(branches: [[name: '*/main']],
-                                extensions: [[$class: 'SparseCheckoutPaths',
-                                            sparseCheckoutPaths: [[path: "${SOURCE_DIR}"]]]],
-                                userRemoteConfigs: [[url: "${GITHUB_URL}"]])
-
+            steps {
+                checkout scmGit(branches: [[name: '*/main']],
+                                    extensions: [[$class: 'SparseCheckoutPaths',
+                                                sparseCheckoutPaths: [[path: "${SOURCE_DIR}"]]]],
+                                    userRemoteConfigs: [[url: "${GITHUB_URL}"]])
+            }
         }
 
         stage('소스 빌드') {
