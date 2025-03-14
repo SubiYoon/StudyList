@@ -39,6 +39,9 @@ pipeline {
                                     extensions: [[$class: 'SparseCheckoutPaths',
                                                 sparseCheckoutPaths: [[path: "${SOURCE_DIR}"]]]],
                                     userRemoteConfigs: [[url: "${GITHUB_URL}"]])
+
+                sh "pwd"
+                sh "ls -al"
             }
         }
 
@@ -48,8 +51,8 @@ pipeline {
                 sh "pwd"
                 sh "ls -al"
 
-                sh "cd ./${SOURCE_DIR} && chmod +x ./gradlew"
-                sh "cd ./${SOURCE_DIR} && gradle clean build"
+                sh "chmod +x ./gradlew"
+                sh "gradle clean build"
             }
         }
 
