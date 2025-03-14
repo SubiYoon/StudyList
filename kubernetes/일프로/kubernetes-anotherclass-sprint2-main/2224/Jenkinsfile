@@ -45,6 +45,9 @@ pipeline {
         stage('소스 빌드') {
             steps {
                 // 755권한 필요 (윈도우에서 Git으로 소스 업로드시 권한은 644)
+                sh "pwd"
+                sh "ls -al"
+
                 sh "cd ./${SOURCE_DIR} && chmod +x ./gradlew"
                 sh "cd ./${SOURCE_DIR} && gradle clean build"
             }
