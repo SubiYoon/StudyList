@@ -14,7 +14,7 @@ pipeline {
     environment {
         // 본인의 username으로 하실 분은 수정해주세요.
         DOCKERHUB_USERNAME = 'abctodev'
-        GITHUB_URL = 'https://github.com/k8s-1pro/kubernetes-anotherclass-sprint2.git'
+        GITHUB_URL = 'https://github.com/SubiYoon/StudyList.git'
 
         // [2] 잦은 배포 - versioning 무의미, 계획된 배포 - versioning 필수
         APP_VERSION = '1.0.1'
@@ -51,8 +51,8 @@ pipeline {
                 sh "pwd"
                 sh "ls -al"
 
-                sh "chmod +x ./gradlew"
-                sh "gradle clean build"
+                sh "cd ./${SOURCE_DIR} && chmod +x ./gradlew"
+                sh "cd ./${SOURCE_DIR} && gradle clean build"
             }
         }
 
