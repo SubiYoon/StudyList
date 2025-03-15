@@ -13,13 +13,19 @@ pipeline {
 
     environment {
         // 본인의 username으로 하실 분은 수정해주세요.
-        DOCKERHUB_USERNAME = '1pro'
-        GITHUB_URL = 'https://github.com/k8s-1pro/kubernetes-anotherclass-sprint2.git'
+        DOCKERHUB_USERNAME = 'abctodev'
+        GITHUB_URL = 'https://github.com/SubiYoon/StudyList.git'
 
         APP_VERSION = '1.1.1'
         BUILD_DATE = sh(script: "echo `date +%y%m%d.%d%H%M`", returnStdout: true).trim()
         // 위에 date 포맷 오류가 있어요. %y%m%d.%H%M%S가 맞습니다)
         TAG = "${APP_VERSION}-" + "${BUILD_DATE}"
+
+        // 소스코드 위치
+        SOURCE_DIR = "kubernetes/일프로/project/kubernetes-anotherclass-api-tester-main"
+        
+        // 배포 및 도커관련 위치 
+        KUBE_DIR = "kubernetes/일프로/kubernetes-anotherclass-sprint2-main"
 
         // 실습 넘버링
         CLASS_NUM = '2232'
@@ -27,17 +33,25 @@ pipeline {
 
     stages {
         stage('소스파일 체크아웃') {
-            steps {
-                // 소스코드를 가져올 Github 주소
-                git branch: 'main', url: 'https://github.com/k8s-1pro/kubernetes-anotherclass-api-tester.git'
+           steps {
+                checkout scmGit(branches: [[name: '*/main']],
+                                    extensions: [[$class: 'SparseCheckoutPaths',
+                                                sparseCheckoutPaths: [[path: "${SOURCE_DIR}"]]]],
+                                    userRemoteConfigs: [[url: "${GITHUB_URL}"]])
+
+                sh "pwd"
+                sh "ls -al"
             }
         }
 
         stage('소스 빌드') {
             steps {
                 // 755권한 필요 (윈도우에서 Git으로 소스 업로드시 권한은 644)
-                sh "chmod +x ./gradlew"
-                sh "gradle clean build"
+                sh "pwd"
+                sh "ls -al"
+
+                sh "cd ./${SOURCE_DIR} && chmod +x ./gradlew"
+                sh "cd ./${SOURCE_DIR} && gradle clean build"
             }
         }
 
@@ -45,7 +59,7 @@ pipeline {
             steps {
                 checkout scmGit(branches: [[name: '*/main']],
                         extensions: [[$class: 'SparseCheckoutPaths',
-                                      sparseCheckoutPaths: [[path: "/${CLASS_NUM}"]]]],
+                                        sparseCheckoutPaths: [[path: "${KUBE_DIR}/${CLASS_NUM}"]]]],
                         userRemoteConfigs: [[url: "${GITHUB_URL}"]])
             }
         }
@@ -53,7 +67,7 @@ pipeline {
         stage('컨테이너 빌드 및 업로드') {
             steps {
                 // jar 파일 복사
-                sh "cp ./build/libs/app-0.0.1-SNAPSHOT.jar ./${CLASS_NUM}/build/docker/app-0.0.1-SNAPSHOT.jar"
+                sh "cp ./${SOURCE_DIR}/build/libs/app-0.0.1-SNAPSHOT.jar ./${KUBE_DIR}/${CLASS_NUM}/build/docker/app-0.0.1-SNAPSHOT.jar"
 
                 script{
 
@@ -67,7 +81,11 @@ pipeline {
                         TAG = "1.0.1-231220.175735"  // 1pro useranme 수강생을 위한 고정 태그명
                         sh "docker build ./${CLASS_NUM}/build/docker -t ${DOCKERHUB_USERNAME}/api-tester:${TAG}"
                     } else {
-                        sh "docker build ./${CLASS_NUM}/build/docker -t ${DOCKERHUB_USERNAME}/api-tester:${TAG}"
+
+                        // 도커 빌드
+                        sh "docker build -t ${DOCKERHUB_USERNAME}/api-tester:${TAG} ./${KUBE_DIR}/${CLASS_NUM}/build/docker"
+
+                        // [2] 잦은 배포 - versioning 무의미, 계획된 배포 - versioning 필수
                         sh "docker push ${DOCKERHUB_USERNAME}/api-tester:${TAG}"
                     }
 
