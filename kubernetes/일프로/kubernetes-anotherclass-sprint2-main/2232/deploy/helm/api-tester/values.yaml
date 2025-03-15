@@ -5,7 +5,7 @@
 replicaCount: 2
 
 image:
-  repository: abctodev/api-tester
+  repository: 1pro/api-tester
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
