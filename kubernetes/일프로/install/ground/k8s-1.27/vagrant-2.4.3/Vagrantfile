@@ -3,7 +3,7 @@ Vagrant.configure("2") do |config|
     
   config.vm.box = "rockylinux/8"
   # Disk 확장설정 추가
-  config.disksize.size = "50GB"
+  config.disksize.size = "64GB"
 
   #https://cafe.naver.com/kubeops/26
   config.vbguest.auto_update = false
@@ -12,12 +12,13 @@ Vagrant.configure("2") do |config|
   config.vm.provision :shell, privileged: true, inline: $install_default
   config.vm.define "master-node" do |master|
     master.vm.hostname = "k8s-master"
-    master.vm.network "private_network", ip: "192.168.56.30"
-	master.vm.provider :virtualbox do |vb|
-      vb.memory = 6144
-      vb.cpus = 4
-	  vb.customize ["modifyvm", :id, "--firmware", "efi"]
-	  vb.customize ["modifyvm", :id, "--nested-hw-virt", "on"]
+    master.vm.network "private_network", ip: "192.168.45.30" # 고정아이피를 사용하기 싫으면 "dhcp"
+    master.vm.network "public_network", bridge: "en0"  # 여기서 "en0"은 호스트의 네트워크 인터페이스 이름을 지정
+    master.vm.provider :parallels do |pr|
+      pr.memory = 6144
+      pr.cpus = 4
+	  pr.customize ["modifyvm", :id, "--firmware", "efi"]
+	  pr.customize ["modifyvm", :id, "--nested-hw-virt", "on"]
 	end
     master.vm.provision :shell, privileged: true, inline: $install_master
   end
@@ -50,7 +51,7 @@ yum install -y yum-utils iproute-tc
 
 echo '======= [4-4] hosts 설정 =========='
 cat << EOF >> /etc/hosts
-192.168.56.30 k8s-master
+192.168.45.30 k8s-master
 EOF
 
 echo '======== [5] kubeadm 설치 전 사전작업 ========'
@@ -128,7 +129,7 @@ $install_master = <<-SHELL
 
 echo '======== [8] kubeadm으로 클러스터 생성  ========'
 echo '======== [8-1] 클러스터 초기화 (Pod Network 세팅) ========'
-kubeadm init --pod-network-cidr=20.96.0.0/16 --apiserver-advertise-address 192.168.56.30
+kubeadm init --pod-network-cidr=20.96.0.0/16 --apiserver-advertise-address 192.168.45.30
 
 echo '======== [8-2] kubectl 사용 설정 ========'
 mkdir -p $HOME/.kube
